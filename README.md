@@ -64,9 +64,15 @@ GitHub Pages only hosts static files, so **the quote form can't send email there
 "not switched on yet" message instead of losing the request silently. Use Vercel (below) before pointing ads
 at the site.
 
-### Vercel (live site with working quote form)
+### Vercel (live site with working quote form): https://glossiva-lighting.vercel.app
 
-1. In Vercel, "Add New Project" and import this GitHub repo (the framework is detected as Astro).
-2. Add the environment variables above, then deploy. Vercel builds the default target, which includes the
-   `/api/quote` email function.
-3. Set the real domain in `astro.config.mjs` (`site`) so share previews and search use the right URL.
+The Vercel project `glossiva-lighting` (team "tanjim604's projects") is connected to this GitHub repo, so every
+push to `main` redeploys automatically. It builds the default target, which includes the `/api/quote` email
+function.
+
+Quote requests are emailed to `NOTIFICATION_EMAIL` (currently glossivadetailing@gmail.com) through the same
+Resend account as the Glossiva Detailing site. To change the address, edit the variable in Vercel → Project →
+Settings → Environment Variables and redeploy. Resend's free test sender (`onboarding@resend.dev`) only delivers
+to the Resend account's own email, so a different address needs a domain verified in Resend.
+
+The site's public URL comes from Vercel automatically; add a custom domain in Vercel and links switch to it.
