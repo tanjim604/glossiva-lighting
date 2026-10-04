@@ -1,59 +1,64 @@
+import type { IconName } from '../components/Icon.astro';
+
 export type PackageId = 'classic' | 'signature' | 'christmas' | 'custom';
 
 export interface Package {
   id: PackageId;
   name: string;
-  tagline: string;
-  /** Lighting level shown in the house illustration (1–4). */
-  level: 1 | 2 | 3 | 4;
-  /** What this tier adds on top of the previous one. */
-  adds: string[];
-  /** Everything included, shown as the checklist. */
-  includes: string[];
-  priceLine: string;
-  badge?: string;
+  tier: string;
+  description: string;
+  /** Large price line, e.g. "$7", plus the small unit text next to it. */
+  price: { main: string; unit?: string };
+  services: { label: string; icon: IconName }[];
+  features: string[];
+  featured?: string;
 }
+
+const roofline = { label: 'Roofline', icon: 'home' } as const;
+const wreaths = { label: 'Wreaths', icon: 'wreath' } as const;
+const trees = { label: 'Trees', icon: 'tree' } as const;
+const bushes = { label: 'Bushes', icon: 'leaf' } as const;
 
 export const packages: Package[] = [
   {
     id: 'classic',
     name: 'Classic Roofline',
-    tagline: 'Clean, crisp lines that make the whole house glow.',
-    level: 1,
-    adds: ['Roofline lighting'],
-    includes: ['Roofline lighting'],
-    priceLine: 'Roofline at $7/bulb/ft',
+    tier: 'Essential',
+    description: 'Clean, crisp roofline lighting that outlines your whole home.',
+    price: { main: '$7', unit: '/ bulb / ft' },
+    services: [roofline],
+    features: ['Roofline lighting at $7/bulb/ft', 'Professional installation', 'Takedown in January', 'Rental: nothing to buy or store'],
   },
   {
     id: 'signature',
     name: 'Signature Home',
-    tagline: 'A warm welcome, right at the front door.',
-    level: 2,
-    adds: ['Wreaths'],
-    includes: ['Roofline lighting', 'Wreaths'],
-    priceLine: 'Roofline at $7/bulb/ft',
+    tier: 'Enhanced',
+    description: 'Roofline lighting paired with festive wreaths for a welcoming entrance.',
+    price: { main: '$7', unit: '/ ft + wreaths' },
+    services: [roofline, wreaths],
+    features: ['Everything in Classic Roofline', 'Festive wreaths', 'Installed and taken down for you'],
   },
   {
     id: 'christmas',
     name: 'Glossiva Christmas',
-    tagline: 'The full festive look, from rooftop to garden.',
-    level: 3,
-    adds: ['Trees & bushes'],
-    includes: ['Roofline lighting', 'Wreaths', 'Trees & bushes'],
-    priceLine: 'Roofline at $7/bulb/ft',
-    badge: 'Recommended',
+    tier: 'Full showcase',
+    description: 'The complete display: rooflines, wreaths, trees and bushes.',
+    price: { main: 'Full property' },
+    services: [roofline, wreaths, trees, bushes],
+    features: ['Roofline lighting at $7/bulb/ft', 'Festive wreaths', 'Lit trees', 'Lit bushes and shrubs'],
+    featured: 'Recommended',
   },
   {
     id: 'custom',
     name: 'Glossiva Custom',
-    tagline: 'Dream it up and we’ll light it, designed around your home.',
-    level: 4,
-    adds: ['Custom design'],
-    includes: ['A display designed for your home', 'Any mix of lights, wreaths, trees & bushes'],
-    priceLine: 'Custom quote',
+    tier: 'Bespoke',
+    description: 'A display designed around your property, from first idea to January takedown.',
+    price: { main: 'Custom design' },
+    services: [{ label: 'Custom design', icon: 'sparkle' }],
+    features: ['A design planned with you', 'Any mix of lights, wreaths, trees and bushes', 'Ideal for larger homes'],
   },
 ];
 
 // TODO: confirm how wreaths and trees & bushes are priced.
 export const packagesFootnote =
-  'Roofline lighting is $7 per bulb per foot. Wreaths, trees & bushes are priced in your free quote.';
+  'Roofline lighting is $7 per bulb per foot. Wreaths, trees and bushes are priced in your free quote.';

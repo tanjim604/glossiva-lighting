@@ -4,20 +4,21 @@ import { site, telHref } from '../data/site';
 import Icon from './Icon.astro';
 ---
 
-<section id="faq" class="sheet bg-snow pt-16 pb-24 lg:pt-24 lg:pb-32">
+<section id="faq" class="bg-white py-20 lg:py-24">
   <div class="container-x">
-    <div class="faq-layout">
-      <div class="faq-intro" data-stagger="90">
-        <p class="eyebrow" data-reveal><span class="eyebrow-dot"></span>FAQ</p>
-        <h2 class="section-title mt-4" data-reveal>Questions, answered</h2>
+    <div class="grid gap-10 lg:grid-cols-12 lg:gap-16">
+      <div class="lg:col-span-4" data-stagger="90">
+        <p class="eyebrow" data-reveal>FAQ</p>
+        <h2 class="section-title mt-3" data-reveal>Questions, answered</h2>
         <p class="section-lead mt-4" data-reveal>
-          Everything you need to know about renting your Christmas lights. Still curious? Just ask in your quote request.
+          Everything you need to know about renting your Christmas lights. Still have a question? Ask it in your quote
+          request.
         </p>
         <div class="mt-6 flex flex-wrap gap-3" data-reveal>
-          <a href="#quote" class="btn btn-primary btn-sm">Get my free quote</a>
+          <a href="#quote" class="btn btn-primary">Get my free quote</a>
           {
             site.phone && (
-              <a href={telHref(site.phone)} class="btn btn-secondary btn-sm">
+              <a href={telHref(site.phone)} class="btn btn-outline">
                 <Icon name="phone" class="size-4" /> {site.phone}
               </a>
             )
@@ -25,7 +26,7 @@ import Icon from './Icon.astro';
         </div>
       </div>
 
-      <div class="faq-list" data-stagger="60">
+      <div class="grid gap-3 lg:col-span-8" data-stagger="60">
         {
           faqs.map((item) => (
             <details class="faq-item" data-accordion data-reveal>
@@ -35,8 +36,8 @@ import Icon from './Icon.astro';
                   <Icon name="plus" class="size-4" strokeWidth={2.4} />
                 </span>
               </summary>
-              <div class="faq-a" data-accordion-content>
-                <p>{item.a}</p>
+              <div class="overflow-hidden" data-accordion-content>
+                <p class="px-5 pb-5 text-[0.9375rem] leading-relaxed font-medium text-slate-600 sm:px-6">{item.a}</p>
               </div>
             </details>
           ))
@@ -47,24 +48,15 @@ import Icon from './Icon.astro';
 </section>
 
 <style>
-  .faq-layout {
-    display: grid;
-    gap: 2.5rem;
-  }
-  .faq-list {
-    display: grid;
-    gap: 0.75rem;
-  }
   .faq-item {
-    border-radius: 1.5rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-slate-200);
     background: #fff;
-    border: 1px solid var(--color-line);
-    box-shadow: 0 1px 2px rgb(70 45 10 / 0.04);
-    transition: box-shadow 0.4s var(--ease-soft), border-color 0.4s;
+    transition: border-color 0.3s, box-shadow 0.3s;
   }
   .faq-item[open] {
-    border-color: rgb(212 160 63 / 0.5);
-    box-shadow: var(--shadow-soft);
+    border-color: var(--color-brand-200);
+    box-shadow: 0 12px 30px -20px rgb(15 23 42 / 0.3);
   }
   .faq-q {
     display: flex;
@@ -72,14 +64,13 @@ import Icon from './Icon.astro';
     justify-content: space-between;
     gap: 1rem;
     min-height: 3.75rem;
-    padding: 1rem 1rem 1rem 1.25rem;
+    padding: 1rem 1.25rem;
     cursor: pointer;
     list-style: none;
-    font-size: 1.0625rem;
+    font-size: 1rem;
     font-weight: 700;
     line-height: 1.35;
-    color: var(--color-pine);
-    border-radius: 1.5rem;
+    color: var(--color-slate-900);
   }
   .faq-q::-webkit-details-marker { display: none; }
   .faq-icon {
@@ -88,30 +79,20 @@ import Icon from './Icon.astro';
     flex-shrink: 0;
     width: 2rem;
     height: 2rem;
-    border-radius: 999px;
-    background: var(--color-cream);
-    color: var(--color-pine);
-    transition: transform 0.5s var(--ease-bounce), background-color 0.3s, color 0.3s;
+    border-radius: 0.5rem;
+    background: var(--color-slate-100);
+    color: var(--color-slate-700);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s, color 0.3s;
   }
   .faq-item[open] .faq-icon {
-    transform: rotate(135deg);
-    background: var(--color-cranberry);
+    transform: rotate(45deg);
+    background: var(--color-brand-700);
     color: #fff;
   }
-  .faq-a { overflow: hidden; }
-  .faq-a p {
-    padding: 0 1.25rem 1.25rem;
-    font-size: 1rem;
-    line-height: 1.65;
-    color: var(--color-muted);
-  }
   @media (hover: hover) {
-    .faq-item:not([open]):hover { border-color: rgb(212 160 63 / 0.45); }
+    .faq-item:not([open]):hover { border-color: var(--color-slate-300); }
   }
-  @media (width >= 64rem) {
-    .faq-layout { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 4rem; align-items: start; }
-    .faq-intro { position: sticky; top: 7rem; }
-    .faq-q { padding: 1.125rem 1.25rem 1.125rem 1.5rem; font-size: 1.125rem; }
-    .faq-a p { padding: 0 1.5rem 1.5rem; }
+  @media (width >= 40rem) {
+    .faq-q { padding: 1.125rem 1.5rem; font-size: 1.0625rem; }
   }
 </style>

@@ -38,6 +38,7 @@ export const site = {
 export const nav = [
   { label: 'How it works', href: '#how-it-works' },
   { label: 'Packages', href: '#packages' },
+  { label: 'Why Glossiva', href: '#why' },
   { label: 'Gallery', href: '#gallery' },
   { label: 'FAQ', href: '#faq' },
 ] as const;

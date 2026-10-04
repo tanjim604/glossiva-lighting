@@ -1,191 +1,51 @@
 ---
 import Icon, { type IconName } from './Icon.astro';
 
-const steps: { icon: IconName; title: string; text: string; color: string }[] = [
-  {
-    icon: 'form',
-    title: 'Request a free quote',
-    text: 'Tell us about your home in under a minute. No commitment.',
-    color: 'var(--color-bulb-red)',
-  },
-  {
-    icon: 'design',
-    title: 'We design your display',
-    text: 'We plan your lights around your roofline, wreaths, trees and bushes.',
-    color: 'var(--color-bulb-gold)',
-  },
-  {
-    icon: 'home',
-    title: 'We install it all',
-    text: 'Our insured crew handles the ladders and has you glowing before December.',
-    color: 'var(--color-bulb-green)',
-  },
-  {
-    icon: 'calendar',
-    title: 'We take it down in January',
-    text: 'After the holidays we remove everything. Nothing to untangle or store.',
-    color: 'var(--color-bulb-red)',
-  },
+const steps: { icon: IconName; title: string; text: string }[] = [
+  { icon: 'form', title: 'Request a quote', text: 'Tell us about your home in under a minute. Free, with no obligation.' },
+  { icon: 'design', title: 'We design', text: 'We plan your lights around your roofline, entrance, trees and bushes.' },
+  { icon: 'home', title: 'We install', text: 'Our insured crew handles every ladder and has your home glowing for December.' },
+  { icon: 'calendar', title: 'We take it down', text: 'In January we remove everything. Nothing to untangle, nothing to store.' },
 ];
 ---
 
-<section id="how-it-works" class="sheet bg-snow pt-16 pb-24 lg:pt-24 lg:pb-32" data-pause-offscreen>
+<section id="how-it-works" class="border-b border-slate-200 bg-slate-50 py-20 lg:py-24">
   <div class="container-x">
-    <div class="mx-auto max-w-2xl text-center" data-stagger="90">
-      <p class="eyebrow" data-reveal><span class="eyebrow-dot"></span>How it works</p>
-      <h2 class="section-title mt-4" data-reveal>From quote to glow in four easy steps</h2>
-      <p class="section-lead mt-4" data-reveal>You enjoy the lights. We handle everything else, from the first measurement to the January takedown.</p>
+    <div class="grid gap-6 lg:grid-cols-12 lg:items-end" data-stagger="90">
+      <div class="lg:col-span-7">
+        <p class="eyebrow" data-reveal>How it works</p>
+        <h2 class="section-title mt-3" data-reveal>From quote to glow in four steps</h2>
+      </div>
+      <p class="section-lead lg:col-span-5" data-reveal>
+        A done-for-you service from the first measurement to the January takedown. You just enjoy the lights.
+      </p>
     </div>
 
-    <div class="steps-wrap">
-    <svg class="steps-wire" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M125 10 Q250 58 375 10 Q500 58 625 10 Q750 58 875 10" fill="none" stroke="#1f4a36" stroke-width="2" vector-effect="non-scaling-stroke" />
-    </svg>
-    <ol class="steps" data-stagger="130">
+    <ol class="mt-12 grid gap-5 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4" data-stagger="110">
       {
         steps.map((step, i) => (
-          <li class="step" data-reveal>
-            <span class="step-bulb bulb" style={`--c:${step.color};--tw:${3 + i * 0.4}s`} aria-hidden="true">
-              <span class="bulb-glow" />
-              <span class="bulb-cap" />
-              <span class="bulb-glass" />
-              <span class="bulb-lit" />
-            </span>
-            <div class="step-card card card-hover">
-              <div class="flex items-center justify-between">
-                <span class="step-icon">
-                  <Icon name={step.icon} class="size-6" />
-                </span>
-                <span class="step-num font-display">0{i + 1}</span>
-              </div>
-              <h3 class="step-title">{step.title}</h3>
-              <p class="step-text">{step.text}</p>
+          <li class="card-lift relative flex flex-col rounded-xl border border-slate-200 bg-white p-6 shadow-sm" data-reveal>
+            <div class="flex items-start justify-between">
+              <span class="text-5xl leading-none font-extrabold tracking-tight text-brand-700">0{i + 1}</span>
+              <span class="grid size-12 place-items-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-100">
+                <Icon name={step.icon} class="size-6" strokeWidth={2} />
+              </span>
             </div>
+            <h3 class="mt-6 text-sm font-extrabold tracking-[0.14em] text-slate-900 uppercase">{step.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed font-medium text-slate-600">{step.text}</p>
           </li>
         ))
       }
     </ol>
-    </div>
 
-    <div class="mt-12 flex justify-center" data-reveal>
-      <a href="#quote" class="btn btn-primary">
-        Start with a free quote
-        <Icon name="arrowRight" class="size-5" strokeWidth={2.2} />
+    <div class="mt-12 flex flex-col items-start gap-4 rounded-xl border border-brand-100 bg-brand-50 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8" data-reveal>
+      <div>
+        <p class="text-lg font-extrabold text-slate-900">Ready to get started?</p>
+        <p class="mt-1 text-sm font-medium text-slate-600">Roofline lighting at $7/bulb/ft. Your quote is free.</p>
+      </div>
+      <a href="#quote" class="btn btn-primary w-full sm:w-auto">
+        Get my free quote <Icon name="arrowRight" class="size-4" strokeWidth={2.4} />
       </a>
     </div>
   </div>
 </section>
-
-<style>
-  .steps-wrap {
-    position: relative;
-    margin-top: 3rem;
-  }
-  .steps {
-    position: relative;
-    display: grid;
-    gap: 1.25rem;
-  }
-  /* Mobile: a vertical wire running through every step's bulb. */
-  .steps::before {
-    content: '';
-    position: absolute;
-    left: 1.25rem;
-    top: 0.5rem;
-    bottom: 2rem;
-    width: 2px;
-    translate: -50% 0;
-    border-radius: 2px;
-    background: linear-gradient(180deg, #1f4a36, #1f4a36 85%, transparent);
-  }
-  .steps-wire { display: none; }
-
-  .step {
-    position: relative;
-    display: grid;
-    grid-template-columns: 2.5rem 1fr;
-    gap: 0.875rem;
-    align-items: start;
-  }
-  .step-bulb {
-    position: relative;
-    left: auto;
-    top: auto;
-    translate: none;
-    justify-self: center;
-    margin-top: 1.4rem;
-    z-index: 1;
-    scale: 1.35;
-  }
-  :global(.step.is-in) .step-bulb .bulb-lit {
-    animation: bulb-on 0.7s ease-out calc(var(--d, 0ms) + 350ms) both;
-  }
-  :global(.step.is-in) .step-bulb .bulb-glow {
-    animation: bulb-on 0.7s ease-out calc(var(--d, 0ms) + 350ms) both;
-  }
-  :global(.step.is-in) .step-bulb .bulb-glow::before {
-    animation: twinkle var(--tw) ease-in-out calc(var(--d, 0ms) + 1.1s) infinite;
-  }
-  .step-card {
-    padding: 1.25rem 1.25rem 1.375rem;
-    border-radius: 1.5rem;
-  }
-  .step-icon {
-    display: grid;
-    place-items: center;
-    width: 3rem;
-    height: 3rem;
-    border-radius: 1rem;
-    background: var(--color-cream);
-    color: var(--color-pine);
-  }
-  .step-num {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--color-line);
-    -webkit-text-stroke: 1px #c9b48f;
-  }
-  .step-title {
-    margin-top: 1rem;
-    font-size: 1.3125rem;
-    line-height: 1.2;
-    font-weight: 650;
-    color: var(--color-pine);
-  }
-  .step-text {
-    margin-top: 0.5rem;
-    font-size: 0.9375rem;
-    line-height: 1.55;
-    color: var(--color-muted);
-  }
-
-  /* Desktop: four columns, the wire swagged between the bulbs above each card. */
-  @media (width >= 64rem) {
-    .steps-wrap { margin-top: 4rem; }
-    /* No column gap: each bulb then sits exactly at 12.5% / 37.5% / 62.5% / 87.5%, where the wire anchors. */
-    .steps {
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0;
-      padding-top: 0.25rem;
-    }
-    .steps::before { display: none; }
-    .steps-wire {
-      display: block;
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      width: 100%;
-      height: 60px;
-      overflow: visible;
-    }
-    .step {
-      grid-template-columns: 1fr;
-      justify-items: center;
-      gap: 1.75rem;
-      padding-inline: 0.75rem;
-    }
-    .step-bulb { margin-top: 0.4rem; scale: 1.5; }
-    .step-card { width: 100%; height: 100%; padding: 1.75rem 1.5rem; }
-  }
-</style>

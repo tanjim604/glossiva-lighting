@@ -44,7 +44,7 @@ const jsonLd = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex" />}
-    <meta name="theme-color" content="#fffcf7" />
+    <meta name="theme-color" content="#0f172a" />
     <link rel="icon" href={withBase('favicon-32.png')} type="image/png" sizes="32x32" />
     <link rel="icon" href={withBase('favicon-192.png')} type="image/png" sizes="192x192" />
     <link rel="apple-touch-icon" href={withBase('apple-touch-icon.png')} />
@@ -60,12 +60,11 @@ const jsonLd = {
     <meta property="og:locale" content="en_CA" />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <Font cssVariable="--font-fraunces" preload />
     <Font cssVariable="--font-jakarta" preload />
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
-  <body class="bg-snow text-ink antialiased">
+  <body class="bg-slate-50 text-slate-900 antialiased">
     <slot />
     <script>
       import '../scripts/main';

@@ -1,86 +1,101 @@
 ---
-import { nav } from '../data/site';
+import { nav, site, telHref } from '../data/site';
+import Icon from './Icon.astro';
 import Logo from './Logo.astro';
 ---
 
-<header class="site-header fixed inset-x-0 top-0 z-50" data-header>
-  <div class="container-x">
-    <div class="header-inner">
-      <a href="#top" class="logo-link" aria-label="Glossiva Holiday Lighting & Decor, back to top">
-        <Logo eager />
-      </a>
-      <nav aria-label="Main" class="hidden lg:block">
-        <ul class="flex items-center gap-1">
-          {
-            nav.map((item) => (
-              <li>
-                <a href={item.href} class="nav-link">
-                  {item.label}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </nav>
-      <a href="#quote" class="btn btn-primary btn-sm">Get a quote</a>
+<div class="bg-brand-700 text-xs text-white">
+  <div class="container-x flex items-center justify-between gap-3 py-2">
+    <span class="inline-flex items-center gap-1.5 font-bold">
+      <Icon name="tag" class="size-3.5 text-amber-300" strokeWidth={2.4} />
+      Roofline lighting {site.price.compact}
+    </span>
+    <div class="flex items-center gap-4 font-semibold">
+      <span class="inline-flex items-center gap-1.5">
+        <Icon name="shield" class="size-4 text-amber-300" strokeWidth={2} />
+        {site.insurance.amount} insured
+      </span>
+      <span class="hidden items-center gap-1.5 sm:inline-flex">
+        <Icon name="pin" class="size-4 text-amber-300" strokeWidth={2} />
+        {site.city}, {site.region}
+      </span>
+      {
+        site.phone && (
+          <a href={telHref(site.phone)} class="hidden items-center gap-1.5 underline-offset-2 hover:underline md:inline-flex">
+            <Icon name="phone" class="size-4" strokeWidth={2} />
+            {site.phone}
+          </a>
+        )
+      }
     </div>
+  </div>
+</div>
+
+<header class="site-header sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md" data-header>
+  <div class="container-x flex h-16 items-center justify-between gap-3 lg:h-20">
+    <a href="#top" class="shrink-0" aria-label="Glossiva Holiday Lighting & Decor, back to top">
+      <Logo eager />
+    </a>
+
+    <nav aria-label="Main" class="hidden lg:block">
+      <ul class="flex items-center gap-8 text-sm font-semibold text-slate-700">
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} class="transition-colors hover:text-brand-700">
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="#quote" class="btn btn-primary btn-sm">
+        <span class="sm:hidden">Get quote</span>
+        <span class="hidden sm:inline">Get a free quote</span>
+        <Icon name="arrowRight" class="hidden size-4 sm:block" strokeWidth={2.4} />
+      </a>
+      <button
+        type="button"
+        class="grid size-11 place-items-center rounded-lg text-slate-700 transition-colors hover:bg-slate-100 lg:hidden"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        data-menu-toggle
+      >
+        <Icon name="menu" class="size-6" strokeWidth={2} />
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="border-t border-slate-200 bg-white lg:hidden" hidden data-mobile-menu>
+    <nav aria-label="Mobile" class="container-x py-3">
+      <ul class="grid gap-1 text-base font-semibold text-slate-800">
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} class="block rounded-lg px-3 py-3 transition-colors hover:bg-slate-50 hover:text-brand-700" data-menu-link>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a href="#quote" class="btn btn-primary mt-3 mb-2 w-full" data-menu-link>
+        Get my free quote <Icon name="arrowRight" class="size-4" strokeWidth={2.4} />
+      </a>
+    </nav>
   </div>
 </header>
 
 <style>
-  .site-header::before {
-    content: '';
-    position: absolute;
-    inset: 0 0 -1.5rem;
-    z-index: -1;
-    background: linear-gradient(180deg, var(--color-snow) 35%, rgb(255 252 247 / 0));
-    opacity: 0;
-    transition: opacity 0.5s var(--ease-soft);
-    pointer-events: none;
+  /* A soft shadow appears once the page is scrolled (toggled in chrome.ts). */
+  .site-header {
+    transition: box-shadow 0.3s;
   }
-  :global(.is-scrolled).site-header::before { opacity: 0.92; }
-  .header-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    height: 3.75rem;
-    margin-top: 0.5rem;
-    padding: 0 0.375rem 0 0.75rem;
-    border-radius: 999px;
-    border: 1px solid transparent;
-    transition:
-      background-color 0.5s var(--ease-soft),
-      box-shadow 0.5s var(--ease-soft),
-      border-color 0.5s var(--ease-soft);
-  }
-  :global(.is-scrolled) .header-inner {
-    background: rgb(255 252 247 / 0.82);
-    -webkit-backdrop-filter: blur(16px) saturate(1.4);
-    backdrop-filter: blur(16px) saturate(1.4);
-    border-color: rgb(232 220 200 / 0.8);
-    box-shadow: 0 10px 30px -14px rgb(70 45 10 / 0.25);
-  }
-  .logo-link {
-    display: inline-flex;
-    border-radius: 999px;
-    padding: 0.25rem;
-  }
-  .nav-link {
-    display: inline-flex;
-    align-items: center;
-    min-height: 2.5rem;
-    padding-inline: 1rem;
-    border-radius: 999px;
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--color-pine);
-    transition: background-color 0.3s;
-  }
-  @media (hover: hover) {
-    .nav-link:hover { background: rgb(241 229 209 / 0.8); }
-  }
-  @media (width >= 64rem) {
-    .header-inner { height: 4rem; padding-left: 1rem; }
+  .site-header:global(.is-scrolled) {
+    box-shadow: 0 8px 24px -16px rgb(15 23 42 / 0.35);
   }
 </style>

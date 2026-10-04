@@ -1,9 +1,8 @@
-/** Page chrome: header scroll state, the floating mobile CTA, light strings, and pausing off-screen animation. */
+/** Page chrome: header shadow on scroll, the mobile menu, and the floating mobile CTA. */
 export function initChrome() {
   initHeader();
+  initMobileMenu();
   initStickyCta();
-  initLightStrings();
-  initPauseOffscreen();
 }
 
 function initHeader() {
@@ -11,7 +10,7 @@ function initHeader() {
   if (!header) return;
   let ticking = false;
   const update = () => {
-    header.classList.toggle('is-scrolled', window.scrollY > 16);
+    header.classList.toggle('is-scrolled', window.scrollY > 40);
     ticking = false;
   };
   window.addEventListener(
@@ -24,6 +23,28 @@ function initHeader() {
     { passive: true },
   );
   update();
+}
+
+function initMobileMenu() {
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.querySelector<HTMLElement>('[data-mobile-menu]');
+  if (!toggle || !menu) return;
+
+  const setOpen = (open: boolean) => {
+    menu.hidden = !open;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  };
+  toggle.addEventListener('click', () => setOpen(menu.hidden !== false));
+  menu.querySelectorAll('[data-menu-link]').forEach((link) => link.addEventListener('click', () => setOpen(false)));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !menu.hidden) {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
+  // Close if the layout switches to desktop while open.
+  matchMedia('(min-width: 64rem)').addEventListener('change', (e) => e.matches && setOpen(false));
 }
 
 /** Show the floating "Get my free quote" pill once the hero CTA is scrolled past, and hide it near the form/footer. */
@@ -46,7 +67,6 @@ function initStickyCta() {
     update();
   }).observe(heroCta);
 
-  const hideNear = document.querySelectorAll('#quote, [data-hide-sticky]');
   const io = new IntersectionObserver((entries) => {
     for (const entry of entries) {
       if (entry.isIntersecting) blockers.add(entry.target);
@@ -54,31 +74,5 @@ function initStickyCta() {
     }
     update();
   });
-  hideNear.forEach((el) => io.observe(el));
-}
-
-/** Light strings that aren't autoplaying switch on the first time they scroll into view. */
-function initLightStrings() {
-  const strings = document.querySelectorAll<HTMLElement>('[data-light-string]');
-  if (!strings.length) return;
-  const io = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        entry.target.classList.add('is-on');
-        io.unobserve(entry.target);
-      }
-    },
-    { threshold: 0.4 },
-  );
-  strings.forEach((el) => io.observe(el));
-}
-
-/** Infinite animations (twinkle, bokeh, sway) stop running while their section is off-screen. */
-function initPauseOffscreen() {
-  const sections = document.querySelectorAll<HTMLElement>('[data-pause-offscreen]');
-  const io = new IntersectionObserver((entries) => {
-    for (const entry of entries) entry.target.classList.toggle('is-paused', !entry.isIntersecting);
-  });
-  sections.forEach((el) => io.observe(el));
+  document.querySelectorAll('#quote, [data-hide-sticky]').forEach((el) => io.observe(el));
 }

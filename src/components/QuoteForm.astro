@@ -3,8 +3,6 @@ import { QUOTE_ENDPOINT } from 'astro:env/client';
 import { packages } from '../data/packages';
 import { site, telHref } from '../data/site';
 import Icon from './Icon.astro';
-import InsuranceBadge from './InsuranceBadge.astro';
-import LightString from './LightString.astro';
 import { withBase } from '../utils/url';
 
 const nextSteps = [
@@ -22,37 +20,42 @@ const errorFallback = site.phone
   : 'Something went wrong sending your request. Please try again in a moment.';
 ---
 
-<section id="quote" class="sheet bg-cream pt-16 pb-24 lg:pt-24 lg:pb-32">
+<section id="quote" class="border-b border-slate-200 bg-slate-50 py-20 lg:py-24">
   <div class="container-x">
     <div class="quote-layout">
       <div class="quote-intro" data-stagger="90">
-        <p class="eyebrow" data-reveal><span class="eyebrow-dot"></span>Free quote</p>
-        <h2 class="section-title mt-4" data-reveal>Let’s light up your home</h2>
+        <p class="eyebrow" data-reveal>Free quote</p>
+        <h2 class="section-title mt-3" data-reveal>Get your free lighting quote</h2>
         <p class="section-lead mt-4" data-reveal>
-          Tell us a little about your place and we’ll put together your free, no-obligation quote.
+          Tell us a little about your home and we’ll send a clear quote. No obligation, no surprise charges.
         </p>
-
-        <div class="quote-highlights" data-reveal>
-          <p class="mini-tag">
-            <span class="font-display mini-tag-amount">{site.price.amount}</span>
-            <span class="mini-tag-unit">{site.price.unit}</span>
+        <div class="mt-6 flex flex-wrap gap-3" data-reveal>
+          <p class="inline-flex items-baseline gap-1.5 rounded-lg border-2 border-amber-400 bg-white px-4 py-2 font-extrabold text-slate-900">
+            <span class="text-2xl text-brand-700">{site.price.amount}</span>
+            <span class="text-sm">{site.price.unit}</span>
           </p>
-          <InsuranceBadge variant="chip" />
+          <p class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-900">
+            <Icon name="shield" class="size-5 text-brand-600" strokeWidth={2} />
+            {site.insurance.amount} {site.insurance.label}
+          </p>
         </div>
       </div>
 
-      <ol class="next-steps" data-reveal aria-label="What happens next">
-        {
-          nextSteps.map((step, i) => (
-            <li>
-              <span class="next-num font-display">{i + 1}</span>
-              {step}
-            </li>
-          ))
-        }
-      </ol>
+      <div class="next-steps" data-reveal>
+        <p class="text-xs font-extrabold tracking-[0.14em] text-slate-500 uppercase">What happens next</p>
+        <ol class="grid gap-3.5">
+          {
+            nextSteps.map((step, i) => (
+              <li class="flex items-center gap-3 text-sm font-semibold text-slate-700">
+                <span class="grid size-8 shrink-0 place-items-center rounded-lg bg-brand-700 text-sm font-extrabold text-white">{i + 1}</span>
+                {step}
+              </li>
+            ))
+          }
+        </ol>
+      </div>
 
-      <div class="form-card card" data-reveal>
+      <div class="form-card" data-reveal>
         <form
           class="quote-form"
           action={endpoint || undefined}
@@ -65,22 +68,22 @@ const errorFallback = site.phone
         >
           <div class="fields">
             <div class="field">
-              <label for="q-name">Your name</label>
-              <input id="q-name" name="name" type="text" autocomplete="name" required maxlength="80" aria-describedby="q-name-err" />
+              <label for="q-name">Full name *</label>
+              <input id="q-name" name="name" type="text" autocomplete="name" required maxlength="80" placeholder="Jane Smith" aria-describedby="q-name-err" />
               <p class="field-error" id="q-name-err" hidden></p>
             </div>
             <div class="field">
-              <label for="q-phone">Phone</label>
-              <input id="q-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="25" aria-describedby="q-phone-err" />
+              <label for="q-phone">Phone number *</label>
+              <input id="q-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="25" placeholder="(250) 000-0000" aria-describedby="q-phone-err" />
               <p class="field-error" id="q-phone-err" hidden></p>
             </div>
             <div class="field field--full">
               <label for="q-email">Email <span class="optional">(optional)</span></label>
-              <input id="q-email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="120" aria-describedby="q-email-err" />
+              <input id="q-email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="120" placeholder="jane@example.com" aria-describedby="q-email-err" />
               <p class="field-error" id="q-email-err" hidden></p>
             </div>
             <div class="field field--full">
-              <label for="q-address">Address or neighbourhood</label>
+              <label for="q-address">Address or neighbourhood *</label>
               <input
                 id="q-address"
                 name="address"
@@ -88,7 +91,7 @@ const errorFallback = site.phone
                 autocomplete="street-address"
                 required
                 maxlength="160"
-                placeholder="e.g. 123 Main St, or Sahali"
+                placeholder="123 Main St, or Sahali"
                 aria-describedby="q-address-err"
               />
               <p class="field-error" id="q-address-err" hidden></p>
@@ -110,7 +113,7 @@ const errorFallback = site.phone
                 name="notes"
                 rows="3"
                 maxlength="1000"
-                placeholder="e.g. two-storey home, a big spruce out front"></textarea>
+                placeholder="Two-storey home, light colour preference (warm white or multi-colour), trees out front…"></textarea>
             </div>
           </div>
 
@@ -120,24 +123,25 @@ const errorFallback = site.phone
           </div>
           {['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid', 'elapsed', 'page'].map((n) => <input type="hidden" name={n} />)}
 
-          <button type="submit" class="btn btn-primary submit-btn w-full" data-submit>
+          <button type="submit" class="btn btn-primary btn-lg submit-btn w-full" data-submit>
             <span class="submit-label">Send my free quote request</span>
             <span class="spinner" aria-hidden="true"></span>
           </button>
-          <p class="form-note">No obligation, no spam. Just your quote.</p>
+          <p class="mt-3 text-center text-xs font-medium text-slate-500">No obligation, no spam. Just your quote.</p>
           <p class="form-error" role="alert" data-form-error hidden></p>
         </form>
 
         <div class="form-success" data-form-success hidden tabindex="-1">
-          <LightString swags={2} bulbs={10} height={52} sag={18} top={6} delay={150} step={90} small />
-          <span class="success-icon"><Icon name="check" class="size-7" strokeWidth={2.4} /></span>
-          <h3 class="success-title font-display">Thank you<span data-success-name></span>!</h3>
-          <p class="success-text">
+          <span class="grid size-16 place-items-center rounded-full bg-brand-700 text-white shadow-lg">
+            <Icon name="check" class="size-8" strokeWidth={2.6} />
+          </span>
+          <h3 class="mt-5 text-2xl font-extrabold text-slate-900">Thank you<span data-success-name></span>!</h3>
+          <p class="mt-3 max-w-sm text-sm leading-relaxed font-medium text-slate-600">
             Your request is on its way. We’ll be in touch {site.responseTime} with your free quote.
           </p>
           {
             site.phone && (
-              <a href={telHref(site.phone)} class="btn btn-secondary btn-sm mt-6">
+              <a href={telHref(site.phone)} class="btn btn-outline btn-sm mt-6">
                 <Icon name="phone" class="size-4" /> Prefer to talk? {site.phone}
               </a>
             )
@@ -152,131 +156,91 @@ const errorFallback = site.phone
   /* Phones: heading → form → next steps, so the first field is close to where "Get my free quote" lands. */
   .quote-layout {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas: 'intro' 'form' 'steps';
-    gap: 1.75rem;
+    gap: 2rem;
   }
   .quote-intro { grid-area: intro; }
   .form-card { grid-area: form; }
-  .next-steps { grid-area: steps; }
-  .quote-highlights {
-    margin-top: 1.5rem;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.75rem;
-  }
-  .mini-tag {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.4rem;
-    padding: 0.4rem 1.1rem;
-    border-radius: 999px;
-    background: linear-gradient(165deg, #fbe3a2, #f1c869 60%, #e7b552);
-    color: var(--color-pine-700);
-    box-shadow: 0 10px 24px -12px rgb(154 107 23 / 0.6), 0 0 30px rgb(255 217 138 / 0.45), inset 0 1px 0 rgb(255 255 255 / 0.6);
-  }
-  .mini-tag-amount {
-    font-size: 1.625rem;
-    font-weight: 750;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-  }
-  .mini-tag-unit { font-size: 0.875rem; font-weight: 700; }
   .next-steps {
+    grid-area: steps;
     display: grid;
-    gap: 0.75rem;
-    padding-inline: 0.25rem;
-  }
-  .next-steps li {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--color-ink);
-  }
-  .next-num {
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 999px;
-    background: #fff;
-    border: 1px solid var(--color-line);
-    color: var(--color-pine);
-    font-weight: 700;
+    gap: 0.875rem;
   }
 
   .form-card {
-    position: relative;
-    padding: 1.5rem 1.125rem 1.25rem;
-    border-radius: 2rem;
-    box-shadow: var(--shadow-lift);
+    border-radius: 1rem;
+    border: 1px solid var(--color-slate-200);
+    background: #fff;
+    padding: 1.5rem 1.25rem;
+    box-shadow: 0 20px 45px -24px rgb(15 23 42 / 0.3);
   }
   .fields {
     display: grid;
-    gap: 1rem;
+    gap: 1.125rem;
   }
   .field { display: grid; gap: 0.375rem; }
   .field label {
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: var(--color-pine);
+    font-size: 0.6875rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-slate-700);
   }
-  .optional { font-weight: 500; color: var(--color-muted); }
+  .optional { font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--color-slate-500); }
   .field input,
   .field select,
   .field textarea {
     width: 100%;
-    min-height: 3.25rem;
+    min-height: 3.125rem;
     padding: 0.75rem 1rem;
-    border-radius: 1rem;
-    border: 1.5px solid var(--color-line);
-    background: var(--color-snow);
-    color: var(--color-ink);
+    border-radius: 0.625rem;
+    border: 1px solid var(--color-slate-300);
+    background: #fff;
+    color: var(--color-slate-900);
     font-size: 1rem; /* 16px: stops iOS from zooming in on focus */
-    transition: border-color 0.25s, box-shadow 0.25s, background-color 0.25s;
+    font-weight: 500;
+    transition: border-color 0.2s, box-shadow 0.2s;
   }
   .field textarea { resize: vertical; min-height: 6rem; line-height: 1.5; }
-  .field ::placeholder { color: #9aa49e; }
+  .field ::placeholder { color: var(--color-slate-400); }
   .field input:focus,
   .field select:focus,
   .field textarea:focus {
     outline: none;
-    background: #fff;
-    border-color: var(--color-gold);
-    box-shadow: 0 0 0 4px rgb(244 182 63 / 0.25);
+    border-color: var(--color-brand-600);
+    box-shadow: 0 0 0 3px rgb(31 138 63 / 0.18);
   }
   .field [aria-invalid='true'] {
-    border-color: var(--color-cranberry);
-    box-shadow: 0 0 0 4px rgb(181 54 75 / 0.12);
+    border-color: var(--color-red-600);
+    box-shadow: 0 0 0 3px rgb(220 38 38 / 0.12);
   }
   .field-error {
     font-size: 0.8125rem;
     font-weight: 600;
-    color: var(--color-cranberry-700);
+    color: var(--color-red-700);
   }
   .select-wrap { position: relative; }
   .select-wrap select {
     appearance: none;
     padding-right: 2.75rem;
     cursor: pointer;
+    font-weight: 600;
   }
   .select-wrap :global(.select-icon) {
     position: absolute;
     right: 1rem;
     top: 50%;
     translate: 0 -50%;
-    color: var(--color-pine);
+    color: var(--color-slate-500);
     pointer-events: none;
   }
   .select-wrap select.is-picked {
-    animation: picked 1.2s var(--ease-soft);
+    animation: picked 1.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
   @keyframes picked {
-    0% { box-shadow: 0 0 0 0 rgb(244 182 63 / 0.6); border-color: var(--color-gold); }
-    100% { box-shadow: 0 0 0 10px rgb(244 182 63 / 0); }
+    0% { box-shadow: 0 0 0 0 rgb(31 138 63 / 0.45); border-color: var(--color-brand-600); }
+    100% { box-shadow: 0 0 0 10px rgb(31 138 63 / 0); }
   }
 
   .hp {
@@ -287,15 +251,11 @@ const errorFallback = site.phone
     overflow: hidden;
   }
 
-  .submit-btn {
-    margin-top: 1.5rem;
-    min-height: 3.5rem;
-    font-size: 1.0625rem;
-  }
+  .submit-btn { margin-top: 1.5rem; }
   .spinner {
     display: none;
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1.125rem;
+    height: 1.125rem;
     border-radius: 999px;
     border: 2.5px solid rgb(255 255 255 / 0.4);
     border-top-color: #fff;
@@ -303,18 +263,13 @@ const errorFallback = site.phone
   }
   .submit-btn[aria-busy='true'] { pointer-events: none; opacity: 0.9; }
   .submit-btn[aria-busy='true'] .spinner { display: inline-block; }
-  .form-note {
-    margin-top: 0.75rem;
-    text-align: center;
-    font-size: 0.8125rem;
-    color: var(--color-muted);
-  }
   .form-error {
     margin-top: 1rem;
     padding: 0.75rem 1rem;
-    border-radius: 1rem;
-    background: rgb(181 54 75 / 0.08);
-    color: var(--color-cranberry-700);
+    border-radius: 0.625rem;
+    border: 1px solid var(--color-red-200);
+    background: var(--color-red-50);
+    color: var(--color-red-800);
     font-size: 0.875rem;
     font-weight: 600;
   }
@@ -324,35 +279,10 @@ const errorFallback = site.phone
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 0.5rem 0.5rem 1.5rem;
+    padding: 2rem 0.5rem;
     outline: none;
   }
   .form-success[hidden] { display: none; }
-  .form-success :global(.light-string) { margin-bottom: 1.5rem; }
-  .success-icon {
-    display: grid;
-    place-items: center;
-    width: 4rem;
-    height: 4rem;
-    border-radius: 999px;
-    background: linear-gradient(160deg, #2b6047, #1f4a36);
-    color: #fff;
-    box-shadow: 0 14px 30px -12px rgb(31 74 54 / 0.7);
-    animation: rise 0.8s var(--ease-bounce) 0.3s both;
-  }
-  .success-title {
-    margin-top: 1.25rem;
-    font-size: 2rem;
-    font-weight: 650;
-    color: var(--color-pine);
-  }
-  .success-text {
-    margin-top: 0.75rem;
-    max-width: 24rem;
-    font-size: 1.0625rem;
-    line-height: 1.55;
-    color: var(--color-muted);
-  }
 
   @media (width >= 40rem) {
     .fields { grid-template-columns: 1fr 1fr; }
@@ -361,13 +291,13 @@ const errorFallback = site.phone
   }
   @media (width >= 64rem) {
     .quote-layout {
-      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
       grid-template-areas: 'intro form' 'steps form';
       grid-template-rows: auto 1fr;
       column-gap: 4rem;
-      row-gap: 2rem;
+      row-gap: 2.5rem;
       align-items: start;
     }
-    .form-card { padding: 2.5rem; border-radius: 2.5rem; }
+    .form-card { padding: 2.5rem; }
   }
 </style>

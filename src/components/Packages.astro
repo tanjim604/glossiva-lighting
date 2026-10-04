@@ -4,55 +4,21 @@ import { site } from '../data/site';
 import PackageCard from './PackageCard.astro';
 ---
 
-<section id="packages" class="sheet bg-cream pt-16 pb-24 lg:pt-24 lg:pb-32" data-pause-offscreen>
+<section id="packages" class="border-b border-slate-200 bg-white py-20 lg:py-24">
   <div class="container-x">
-    <div class="mx-auto max-w-2xl text-center" data-stagger="90">
-      <p class="eyebrow" data-reveal><span class="eyebrow-dot"></span>Packages</p>
-      <h2 class="section-title mt-4" data-reveal>Choose your level of sparkle</h2>
+    <div class="mx-auto max-w-3xl text-center" data-stagger="90">
+      <p class="eyebrow" data-reveal>Packages</p>
+      <h2 class="section-title mt-3" data-reveal>Choose your holiday package</h2>
       <p class="section-lead mt-4" data-reveal>
-        Every package builds on the one before. Pick a starting point, and we’ll tailor it to your home in your free quote.
-      </p>
-      <p class="price-chip" data-reveal>
-        Every roofline at <strong class="font-display">{site.price.compact}</strong>
+        Every package builds on the one before, and every roofline is {site.price.compact}. Pick a starting point and
+        we’ll tailor it to your home in your free quote.
       </p>
     </div>
 
-    <div class="pkg-grid" data-stagger="110">
-      {packages.map((pkg, i) => <PackageCard pkg={pkg} previous={i > 0 ? packages[i - 1] : undefined} />)}
+    <div class="mt-14 grid gap-8 md:grid-cols-2 lg:grid-cols-4 lg:gap-6" data-stagger="110">
+      {packages.map((pkg) => <PackageCard pkg={pkg} />)}
     </div>
 
-    <p class="mx-auto mt-8 max-w-xl text-center text-sm text-muted" data-reveal>{packagesFootnote}</p>
+    <p class="mx-auto mt-10 max-w-xl text-center text-xs font-medium text-slate-500" data-reveal>{packagesFootnote}</p>
   </div>
 </section>
-
-<style>
-  .price-chip {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.4rem;
-    margin-top: 1.5rem;
-    padding: 0.625rem 1.25rem;
-    border-radius: 999px;
-    background: linear-gradient(165deg, #fbe3a2, #f1c869 60%, #e7b552);
-    color: var(--color-pine-700);
-    font-weight: 700;
-    box-shadow: 0 12px 30px -12px rgb(154 107 23 / 0.6), 0 0 40px rgb(255 217 138 / 0.5), inset 0 1px 0 rgb(255 255 255 / 0.6);
-  }
-  .price-chip strong {
-    font-size: 1.375rem;
-    font-weight: 750;
-    letter-spacing: -0.01em;
-    font-variation-settings: 'SOFT' 100;
-  }
-  .pkg-grid {
-    margin-top: 2.75rem;
-    display: grid;
-    gap: 1.25rem;
-  }
-  @media (width >= 48rem) {
-    .pkg-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
-  }
-  @media (width >= 64rem) {
-    .pkg-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.25rem; margin-top: 4rem; align-items: stretch; }
-  }
-</style>

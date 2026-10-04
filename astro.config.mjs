@@ -56,17 +56,6 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.local(),
-      name: 'Fraunces',
-      cssVariable: '--font-fraunces',
-      fallbacks: ['Georgia', 'serif'],
-      options: {
-        variants: [
-          { src: ['./src/assets/fonts/fraunces-latin-soft-normal.woff2'], weight: '100 900', style: 'normal' },
-        ],
-      },
-    },
-    {
-      provider: fontProviders.local(),
       name: 'Plus Jakarta Sans',
       cssVariable: '--font-jakarta',
       fallbacks: ['system-ui', 'sans-serif'],
