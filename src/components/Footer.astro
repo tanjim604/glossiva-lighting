@@ -1,0 +1,203 @@
+---
+import { gallery, heroCredit } from '../data/gallery';
+import { nav, site, telHref } from '../data/site';
+import Icon from './Icon.astro';
+import InsuranceBadge from './InsuranceBadge.astro';
+import LightString from './LightString.astro';
+import Logo from './Logo.astro';
+
+const year = new Date().getFullYear();
+const credits = [heroCredit, ...gallery.map((p) => p.credit)].filter((c) => c != null);
+---
+
+<footer class="sheet footer bg-oat pt-6" data-hide-sticky data-pause-offscreen>
+  <LightString swags={4} bulbs={28} height={60} sag={26} top={4} delay={0} step={55} />
+
+  <div class="container-x">
+    <div class="footer-cta" data-reveal>
+      <h2 class="footer-cta-title">Ready to glow this December?</h2>
+      <p class="footer-cta-text">
+        Roofline lighting at <strong>{site.price.compact}</strong>. Install and January takedown handled for you.
+      </p>
+      <div class="mt-7 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+        <span class="cta-halo">
+          <a href="#quote" class="btn btn-primary px-8">
+            Get my free quote
+            <Icon name="arrowRight" class="size-5" strokeWidth={2.2} />
+          </a>
+        </span>
+        <InsuranceBadge variant="chip" />
+      </div>
+    </div>
+
+    <div class="footer-grid">
+      <div>
+        <Logo variant="stacked" />
+        <p class="mt-4 max-w-xs text-[0.9375rem] leading-relaxed text-muted">{site.tagline}.</p>
+      </div>
+
+      <nav aria-label="Footer">
+        <p class="footer-head">Explore</p>
+        <ul class="footer-links">
+          {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+          <li><a href="#quote">Free quote</a></li>
+        </ul>
+      </nav>
+
+      <div>
+        <p class="footer-head">Contact</p>
+        <ul class="footer-links">
+          {site.phone && <li><a href={telHref(site.phone)}><Icon name="phone" class="size-4" />{site.phone}</a></li>}
+          {site.email && <li><a href={`mailto:${site.email}`}><Icon name="mail" class="size-4" />{site.email}</a></li>}
+          <li class="footer-plain"><Icon name="pin" class="size-4" />{site.serviceArea}</li>
+        </ul>
+        {
+          (site.social.instagram || site.social.facebook) && (
+            <div class="mt-4 flex gap-2">
+              {site.social.instagram && (
+                <a href={site.social.instagram} class="social" aria-label="Instagram" target="_blank" rel="noopener">
+                  <Icon name="instagram" class="size-5" />
+                </a>
+              )}
+              {site.social.facebook && (
+                <a href={site.social.facebook} class="social" aria-label="Facebook" target="_blank" rel="noopener">
+                  <Icon name="facebook" class="size-5" />
+                </a>
+              )}
+            </div>
+          )
+        }
+      </div>
+    </div>
+
+    <div class="footer-legal">
+      <p>© {year} {site.name}. All rights reserved.</p>
+      {
+        credits.length > 0 && (
+          <details class="credits">
+            <summary>Placeholder photo credits</summary>
+            <ul>
+              {credits.map((c) => (
+                <li>
+                  <a href={c.url} target="_blank" rel="noopener">{c.author}</a>, {c.license}, via Wikimedia Commons
+                </li>
+              ))}
+            </ul>
+          </details>
+        )
+      }
+    </div>
+  </div>
+
+  <p class="wordmark font-display" aria-hidden="true">GLOSSIVA</p>
+</footer>
+
+<style>
+  .footer {
+    overflow: hidden;
+  }
+  .footer-cta {
+    margin-top: 2rem;
+    padding: 2.5rem 1.25rem;
+    border-radius: 2rem;
+    text-align: center;
+    background:
+      radial-gradient(80% 120% at 50% 0%, rgb(255 217 138 / 0.45), transparent 60%),
+      var(--color-snow);
+    border: 1px solid var(--color-line);
+    box-shadow: var(--shadow-soft);
+  }
+  .footer-cta-title {
+    font-size: clamp(2rem, 1.4rem + 3vw, 3.5rem);
+    line-height: 1.05;
+    font-weight: 620;
+    letter-spacing: -0.02em;
+    color: var(--color-pine);
+  }
+  .footer-cta-text {
+    margin: 1rem auto 0;
+    max-width: 30rem;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--color-muted);
+  }
+  .footer-cta-text strong { color: var(--color-pine); }
+  .footer-grid {
+    margin-top: 3.5rem;
+    display: grid;
+    gap: 2rem;
+  }
+  .footer-head {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-gold-ink);
+  }
+  .footer-links {
+    margin-top: 0.75rem;
+    display: grid;
+    gap: 0.25rem;
+  }
+  .footer-links a,
+  .footer-plain {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.25rem;
+    font-weight: 600;
+    color: var(--color-pine);
+  }
+  .footer-links a { transition: color 0.2s; }
+  @media (hover: hover) {
+    .footer-links a:hover { color: var(--color-cranberry); }
+  }
+  .social {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    background: var(--color-snow);
+    color: var(--color-pine);
+    border: 1px solid var(--color-line);
+  }
+  .footer-legal {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgb(201 180 143 / 0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-size: 0.8125rem;
+    color: var(--color-muted);
+  }
+  .credits summary { cursor: pointer; font-weight: 600; }
+  .credits ul { margin-top: 0.5rem; display: grid; gap: 0.25rem; }
+  .credits a { text-decoration: underline; text-underline-offset: 2px; }
+
+  .wordmark {
+    margin-top: 2rem;
+    margin-bottom: -0.2em;
+    text-align: center;
+    font-size: 18.5vw;
+    line-height: 0.9;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    background: linear-gradient(180deg, #e7c475 0%, #d4a03f 55%, rgb(212 160 63 / 0.15) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    user-select: none;
+  }
+
+  @media (width >= 48rem) {
+    .footer-cta { padding: 3.5rem 2rem; border-radius: 2.5rem; }
+    .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; }
+    .footer-legal { flex-direction: row; justify-content: space-between; align-items: flex-start; }
+  }
+  @media (width >= 64rem) {
+    .footer-cta { margin-top: 2.5rem; padding: 4.5rem 2rem; }
+    .wordmark { font-size: min(17.5vw, 16rem); }
+  }
+</style>

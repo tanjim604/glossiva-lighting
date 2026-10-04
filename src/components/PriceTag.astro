@@ -1,0 +1,127 @@
+---
+/**
+ * The $7/bulb/ft price, as a glowing gold gift tag hanging on a twine.
+ * It drops in with a spring, then sways gently. Twine length comes from --twine.
+ */
+import { site } from '../data/site';
+
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+
+<div class:list={['price-tag', className]}>
+  <div class="tag-drop">
+    <div class="tag-sway">
+      <span class="tag-knot" aria-hidden="true"></span>
+      <span class="tag-twine" aria-hidden="true"></span>
+      <div class="tag-body">
+        <span class="tag-hole" aria-hidden="true"></span>
+        <p class="tag-label">Roofline lighting</p>
+        <p class="tag-amount font-display">{site.price.amount}</p>
+        <p class="tag-unit">{site.price.unit}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .price-tag {
+    --twine: 18px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+  .tag-sway {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .tag-knot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid #9a7a45;
+    background: var(--color-snow);
+  }
+  .tag-twine {
+    width: 2px;
+    height: var(--twine);
+    background: linear-gradient(180deg, #9a7a45, #b8955a);
+    border-radius: 2px;
+  }
+  .tag-body {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    margin-top: -4px;
+    padding: 1.35rem 1.25rem 1.1rem;
+    min-width: 9.5rem;
+    border-radius: 1.75rem 1.75rem 1.5rem 1.5rem;
+    text-align: center;
+    color: var(--color-pine);
+    background: linear-gradient(165deg, #fbe3a2 0%, #f1c869 42%, #e0ad4c 100%);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.7),
+      inset 0 -2px 6px rgb(154 107 23 / 0.25),
+      0 18px 36px -14px rgb(154 107 23 / 0.65),
+      0 0 60px 4px rgb(255 217 138 / 0.55);
+  }
+  /* Stitched paper edge. */
+  .tag-body::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border-radius: 1.4rem 1.4rem 1.15rem 1.15rem;
+    border: 1.5px dashed rgb(31 74 54 / 0.28);
+    pointer-events: none;
+  }
+  /* Gloss sweep every few seconds. */
+  .tag-body::after {
+    content: '';
+    position: absolute;
+    inset: -20% -60%;
+    z-index: -1;
+    background: linear-gradient(105deg, transparent 40%, rgb(255 255 255 / 0.6) 50%, transparent 60%);
+    transform: translateX(-70%);
+    animation: tag-gloss 6s ease-in-out 3.2s infinite;
+  }
+  .tag-hole {
+    position: absolute;
+    top: 0.55rem;
+    left: 50%;
+    width: 0.7rem;
+    height: 0.7rem;
+    translate: -50% 0;
+    border-radius: 50%;
+    background: var(--color-snow);
+    box-shadow: inset 0 1px 2px rgb(154 107 23 / 0.5);
+  }
+  .tag-label {
+    margin-top: 0.35rem;
+    font-size: 0.625rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgb(23 56 40 / 0.85);
+  }
+  .tag-amount {
+    font-size: clamp(3.4rem, 2.6rem + 3vw, 4.75rem);
+    line-height: 0.95;
+    font-weight: 750;
+    letter-spacing: -0.04em;
+    color: var(--color-pine-700);
+    text-shadow: 0 1px 0 rgb(255 255 255 / 0.45);
+  }
+  .tag-unit {
+    margin-top: 0.3rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-pine-700);
+  }
+  @keyframes tag-gloss {
+    0%, 70% { transform: translateX(-70%); }
+    100% { transform: translateX(70%); }
+  }
+</style>

@@ -1,0 +1,177 @@
+---
+/**
+ * Little house illustration whose lighting grows with the package tier:
+ * 1 roofline · 2 + wreaths · 3 + trees & bushes · 4 + the whole property (custom).
+ * Light dots are split into two groups that twinkle out of phase (2 animations per card).
+ */
+interface Props {
+  level: 1 | 2 | 3 | 4;
+  id: string;
+}
+const { level, id } = Astro.props;
+
+const colors = ['#e0485f', '#f4b63f', '#2f9e62'];
+type Dot = { x: number; y: number; c: string; g: 0 | 1 };
+const dots: Dot[] = [];
+const push = (x: number, y: number, i: number) =>
+  dots.push({ x: +x.toFixed(1), y: +y.toFixed(1), c: colors[i % 3], g: (i % 2) as 0 | 1 });
+
+// Points along a line, evenly spaced.
+const along = (x0: number, y0: number, x1: number, y1: number, n: number, offset = 0) => {
+  for (let i = 0; i < n; i++) {
+    const t = (i + 0.5) / n;
+    push(x0 + (x1 - x0) * t, y0 + (y1 - y0) * t, i + offset);
+  }
+};
+
+// Roofline: both roof edges + the eave.
+along(26, 63, 80, 22, 7);
+along(80, 22, 134, 63, 7, 7);
+along(36, 66, 124, 66, 9, 1);
+
+if (level >= 3) {
+  // Lights spiralling down two little trees and across two bushes.
+  for (const [cx, base] of [[17, 113], [143, 113]] as const) {
+    for (let i = 0; i < 7; i++) {
+      const t = i / 6;
+      const y = base - 44 + t * 40;
+      const half = 3 + t * 9;
+      push(cx + (i % 2 ? half : -half) * 0.8, y, i);
+    }
+  }
+  along(40, 106, 62, 106, 4, 2);
+  along(98, 106, 120, 106, 4, 1);
+}
+if (level >= 4) {
+  // Windows and door outlined, plus a lit path.
+  for (const wx of [47, 97]) {
+    along(wx, 73, wx + 16, 73, 3, 0);
+    along(wx, 90, wx + 16, 90, 3, 1);
+  }
+  along(70, 82, 90, 82, 3, 2);
+  along(66, 122, 56, 128, 3, 0);
+  along(94, 122, 104, 128, 3, 1);
+}
+
+const showWreaths = level >= 2;
+const showTrees = level >= 3;
+const isCustom = level === 4;
+---
+
+<div class="house-wrap">
+<svg viewBox="0 0 160 132" class="house" role="img" aria-label={`Illustration: ${['roofline lights', 'roofline lights and wreaths', 'roofline lights, wreaths, trees and bushes', 'a fully custom display'][level - 1]}`}>
+  <defs>
+    {
+      colors.map((c, i) => (
+        <radialGradient id={`${id}-g${i}`}>
+          <stop offset="0" stop-color={c} stop-opacity="0.6" />
+          <stop offset="1" stop-color={c} stop-opacity="0" />
+        </radialGradient>
+      ))
+    }
+    <radialGradient id={`${id}-star`}>
+      <stop offset="0" stop-color="#ffd98a" stop-opacity="0.95" />
+      <stop offset="1" stop-color="#ffd98a" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- ground -->
+  <ellipse cx="80" cy="122" rx="76" ry="9" fill="#f1e5d1" />
+
+  {
+    showTrees && (
+      <g fill="#2f6b4f">
+        <path d="M17 64 L29 86 H23 L32 104 H2 L11 86 H5 Z" stroke="#2f6b4f" stroke-width="3" stroke-linejoin="round" />
+        <rect x="14.5" y="104" width="5" height="9" rx="1.5" fill="#8a6440" />
+        <path d="M143 64 L155 86 H149 L158 104 H128 L137 86 H131 Z" stroke="#2f6b4f" stroke-width="3" stroke-linejoin="round" />
+        <rect x="140.5" y="104" width="5" height="9" rx="1.5" fill="#8a6440" />
+      </g>
+    )
+  }
+
+  <!-- house -->
+  <rect x="36" y="60" width="88" height="56" rx="6" fill="#fffdf9" stroke="#e8dcc8" stroke-width="1.5" />
+  <rect x="104" y="28" width="10" height="20" rx="2" fill="#3b6a52" />
+  <path d="M24 64 L80 21 L136 64" fill="#3b6a52" stroke="#3b6a52" stroke-width="6" stroke-linejoin="round" stroke-linecap="round" />
+  <path d="M38 62 L80 30 L122 62 Z" fill="#fffdf9" />
+  <rect x="47" y="73" width="16" height="17" rx="3.5" fill="#fbe7b8" />
+  <rect x="97" y="73" width="16" height="17" rx="3.5" fill="#fbe7b8" />
+  <path d="M71 116 V92 a9 9 0 0 1 18 0 V116 Z" fill="#b5364b" />
+  <circle cx="85" cy="104" r="1.2" fill="#ffd98a" />
+
+  {
+    showTrees && (
+      <g fill="#3f8a63">
+        <ellipse cx="51" cy="112" rx="13" ry="7.5" />
+        <ellipse cx="109" cy="112" rx="13" ry="7.5" />
+      </g>
+    )
+  }
+
+  {
+    showWreaths && (
+      <g class="wreaths">
+        <circle cx="80" cy="44" r="6.5" fill="none" stroke="#2f7a55" stroke-width="3.6" />
+        <path d="M77 49.5 l3 -2.4 l3 2.4 l-3 1.4 Z" fill="#e0485f" />
+        <circle cx="80" cy="96" r="5.5" fill="none" stroke="#2f7a55" stroke-width="3.2" />
+        <path d="M77.4 100.6 l2.6 -2 l2.6 2 l-2.6 1.2 Z" fill="#f4b63f" />
+      </g>
+    )
+  }
+
+</svg>
+
+  {/* Light dots live in their own overlay <svg>s: animating an <svg> box's opacity is GPU-composited,
+      while animating groups inside one SVG repaints it every frame. */}
+  {
+    [0, 1].map((g) => (
+      <svg viewBox="0 0 160 132" class={`house-layer dots-${g}`} aria-hidden="true">
+        {dots
+          .filter((d) => d.g === g)
+          .map((d) => (
+            <>
+              <circle cx={d.x} cy={d.y} r="6" fill={`url(#${id}-g${colors.indexOf(d.c)})`} />
+              <circle cx={d.x} cy={d.y} r="1.9" fill={d.c} />
+            </>
+          ))}
+      </svg>
+    ))
+  }
+
+  {
+    isCustom && (
+      <svg viewBox="0 0 160 132" class="house-layer sparkles" aria-hidden="true">
+        <circle cx="80" cy="16" r="11" fill={`url(#${id}-star)`} />
+        <path d="M80 9.5c.6 3.6 2.3 5.4 5.9 6-3.6.6-5.3 2.4-5.9 6-.6-3.6-2.3-5.4-5.9-6 3.6-.6 5.3-2.4 5.9-6Z" fill="#f4b63f" />
+        <path d="M30 26c.4 2.2 1.4 3.2 3.6 3.6-2.2.4-3.2 1.4-3.6 3.6-.4-2.2-1.4-3.2-3.6-3.6 2.2-.4 3.2-1.4 3.6-3.6Z" fill="#f4b63f" />
+        <path d="M134 14c.4 2.2 1.4 3.2 3.6 3.6-2.2.4-3.2 1.4-3.6 3.6-.4-2.2-1.4-3.2-3.6-3.6 2.2-.4 3.2-1.4 3.6-3.6Z" fill="#e0485f" />
+        <path d="M150 44c.3 1.6 1 2.3 2.6 2.6-1.6.3-2.3 1-2.6 2.6-.3-1.6-1-2.3-2.6-2.6 1.6-.3 2.3-1 2.6-2.6Z" fill="#2f9e62" />
+      </svg>
+    )
+  }
+</div>
+
+<style>
+  .house-wrap {
+    position: relative;
+  }
+  .house,
+  .house-layer {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .house-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .dots-0 { animation: dots-a 3.4s ease-in-out infinite; }
+  .dots-1 { animation: dots-a 3.4s ease-in-out -1.7s infinite; }
+  .sparkles { animation: dots-a 2.6s ease-in-out infinite; }
+  @keyframes dots-a {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+  }
+</style>

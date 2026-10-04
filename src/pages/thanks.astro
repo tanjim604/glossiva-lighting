@@ -1,0 +1,25 @@
+---
+// Shown after a no-JavaScript form submission (the normal flow shows the thank-you in place).
+import Icon from '../components/Icon.astro';
+import LightString from '../components/LightString.astro';
+import Logo from '../components/Logo.astro';
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+import { withBase } from '../utils/url';
+---
+
+<Base title={`Thank you | ${site.name}`} noindex>
+  <main class="grid min-h-dvh place-items-center bg-snow px-4 py-16 text-center">
+    <div class="w-full max-w-lg">
+      <LightString autoplay swags={2} bulbs={12} height={56} sag={22} delay={200} step={80} />
+      <a href={withBase()} class="mt-8 inline-flex" aria-label="Glossiva, back to the site"><Logo variant="stacked" eager /></a>
+      <h1 class="mt-8 text-[2.5rem] leading-tight font-semibold text-pine">Thank you!</h1>
+      <p class="mt-4 text-lg leading-relaxed text-muted">
+        Your quote request is on its way. We’ll be in touch {site.responseTime} with your free quote.
+      </p>
+      <a href={withBase()} class="btn btn-secondary mt-8">
+        <Icon name="chevronLeft" class="size-5" /> Back to the site
+      </a>
+    </div>
+  </main>
+</Base>

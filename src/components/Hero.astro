@@ -1,0 +1,278 @@
+---
+import { Picture } from 'astro:assets';
+import heroImg from '../assets/hero/hero-home.jpg';
+import { heroCredit } from '../data/gallery';
+import { site } from '../data/site';
+import Icon from './Icon.astro';
+import InsuranceBadge from './InsuranceBadge.astro';
+import LightString from './LightString.astro';
+import PriceTag from './PriceTag.astro';
+
+// Soft pastel bokeh drifting behind everything. The last three are desktop-only.
+const bokeh = [
+  { x: '-6%', y: '18%', s: '260px', c: 'var(--color-glow)', dur: '19s', dx: '30px', dy: '-24px' },
+  { x: '70%', y: '-4%', s: '300px', c: '#f6c7c9', dur: '23s', dx: '-26px', dy: '22px' },
+  { x: '78%', y: '58%', s: '220px', c: '#cfe3d3', dur: '17s', dx: '-20px', dy: '-26px' },
+  { x: '30%', y: '72%', s: '200px', c: 'var(--color-glow)', dur: '21s', dx: '24px', dy: '-16px' },
+  { x: '42%', y: '6%', s: '160px', c: '#f6c7c9', dur: '25s', dx: '18px', dy: '20px', desktop: true },
+  { x: '10%', y: '82%', s: '180px', c: '#cfe3d3', dur: '20s', dx: '22px', dy: '-20px', desktop: true },
+];
+---
+
+<section id="top" class="hero relative isolate overflow-hidden bg-snow pb-20 lg:pb-28" data-pause-offscreen>
+  <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+    <div class="bokeh absolute inset-0">
+      {
+        bokeh.map((b) => (
+          <span
+            class:list={[b.desktop && 'max-lg:hidden']}
+            style={`--x:${b.x};--y:${b.y};--s:${b.s};--c:${b.c};--dur:${b.dur};--dx:${b.dx};--dy:${b.dy}`}
+          />
+        ))
+      }
+    </div>
+  </div>
+
+  <LightString class="hero-string" autoplay swags={3} bulbs={24} height={70} sag={34} delay={650} step={65} />
+
+  <div class="container-x">
+    <div class="hero-grid">
+      <p class="hero-eyebrow hero-in" style="--d:0ms">
+        <span class="eyebrow"><span class="eyebrow-dot"></span>Christmas light rental · {site.city}, {site.region}</span>
+      </p>
+
+      <h1 class="hero-title hero-in" style="--d:80ms">
+        Glowing all <span class="mark">December.</span>
+        <span class="block text-cranberry">Without the ladder.</span>
+      </h1>
+
+      <p class="hero-sub hero-in" style="--d:180ms">
+        We design, install, and take down your Christmas lights, so you can just enjoy the glow.
+      </p>
+
+      <div class="hero-tag">
+        <PriceTag />
+      </div>
+
+      <div class="hero-ins hero-in" style="--d:420ms">
+        <InsuranceBadge variant="hero" />
+      </div>
+
+      <div class="hero-cta hero-in" style="--d:300ms">
+        <span class="cta-halo w-full sm:w-auto">
+          <a href="#quote" class="btn btn-primary w-full px-8 text-[1.0625rem] sm:w-auto" data-hero-cta>
+            Get my free quote
+            <Icon name="arrowRight" class="size-5" strokeWidth={2.2} />
+          </a>
+        </span>
+        <a href="#packages" class="see-packages">
+          See packages
+          <Icon name="arrowDown" class="size-4" strokeWidth={2.2} />
+        </a>
+      </div>
+
+      <figure class="hero-photo hero-in" style="--d:120ms">
+        <div class="hero-photo-frame">
+          <Picture
+            src={heroImg}
+            alt="Two-storey home with warm white C9 bulbs along every roofline, wreaths and garland, on a snowy night"
+            widths={[480, 640, 800, 960, 1280]}
+            sizes="(min-width: 1024px) 44vw, (min-width: 640px) 90vw, calc(100vw - 2rem)"
+            formats={['avif', 'webp']}
+            loading="eager"
+            fetchpriority="high"
+            class="hero-photo-img"
+          />
+          <span class="hero-chip">
+            <Icon name="check" class="size-4" strokeWidth={2.4} />
+            Installed &amp; taken down for you
+          </span>
+          {/* Placeholder photo: credit required by its licence (set heroCredit to null when replaced). */}
+          {
+            heroCredit && (
+              <a class="photo-credit" href={heroCredit.url} target="_blank" rel="noopener">
+                Placeholder photo: {heroCredit.author}, {heroCredit.license}
+              </a>
+            )
+          }
+        </div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-top: 4rem;
+  }
+  .hero-string {
+    position: relative;
+    z-index: 1;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'eyebrow eyebrow'
+      'title title'
+      'sub sub'
+      'tag ins'
+      'cta cta'
+      'photo photo';
+    column-gap: 0.75rem;
+    align-items: start;
+    margin-top: 0.25rem;
+  }
+  .hero-eyebrow { grid-area: eyebrow; }
+  .hero-title {
+    grid-area: title;
+    margin-top: 0.875rem;
+    font-size: clamp(2.3rem, 1.6rem + 3.4vw, 4.1rem);
+    line-height: 1.02;
+    font-weight: 620;
+    letter-spacing: -0.03em;
+    color: var(--color-pine);
+  }
+  .hero-sub {
+    grid-area: sub;
+    margin-top: 0.875rem;
+    max-width: 32rem;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--color-muted);
+  }
+  .hero-tag {
+    grid-area: tag;
+    margin-top: 0.5rem;
+    --tag-delay: 1.35s;
+  }
+  .hero-ins {
+    grid-area: ins;
+    align-self: stretch;
+    display: flex;
+    margin-top: calc(0.5rem + 28px);
+  }
+  .hero-ins :global(.ins) { width: 100%; }
+  @media (width >= 64rem) {
+    .hero-ins :global(.ins) { width: auto; }
+  }
+  .hero-cta {
+    grid-area: cta;
+    margin-top: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .see-packages {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-height: 2.75rem;
+    padding-inline: 0.75rem;
+    font-weight: 700;
+    color: var(--color-pine);
+    border-radius: 999px;
+    transition: background-color 0.3s;
+  }
+  @media (hover: hover) {
+    .see-packages:hover { background: rgb(241 229 209 / 0.7); }
+  }
+  .hero-photo {
+    grid-area: photo;
+    margin-top: 2rem;
+  }
+  .hero-photo-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: 2rem;
+    aspect-ratio: 4 / 3;
+    background: var(--color-oat);
+    box-shadow: var(--shadow-lift);
+    transform: translateZ(0);
+  }
+  .hero-photo-frame :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 45% 60%;
+  }
+  .hero-chip {
+    position: absolute;
+    left: 0.875rem;
+    bottom: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.5rem 0.875rem 0.5rem 0.625rem;
+    border-radius: 999px;
+    background: rgb(255 252 247 / 0.88);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: var(--color-pine);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    box-shadow: 0 8px 20px -10px rgb(0 0 0 / 0.4);
+  }
+  .photo-credit {
+    position: absolute;
+    right: 0.875rem;
+    top: 0.625rem;
+    font-size: 0.625rem;
+    color: rgb(255 255 255 / 0.75);
+    text-shadow: 0 1px 2px rgb(0 0 0 / 0.6);
+  }
+
+  @media (width >= 40rem) {
+    .hero-cta { flex-direction: row; justify-content: flex-start; }
+    .hero-tag, .hero-ins { max-width: 15rem; }
+    .hero-grid { grid-template-columns: auto auto 1fr; grid-template-areas:
+      'eyebrow eyebrow eyebrow'
+      'title title title'
+      'sub sub sub'
+      'tag ins .'
+      'cta cta cta'
+      'photo photo photo'; }
+  }
+
+  /* Desktop: copy on the left, photo on the right, tag hanging from the string over the photo. */
+  @media (width >= 64rem) {
+    .hero { padding-top: 4.5rem; }
+    .hero-grid {
+      grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+      grid-template-areas:
+        'eyebrow photo'
+        'title photo'
+        'sub photo'
+        'cta photo'
+        'ins photo';
+      grid-template-rows: auto auto auto auto 1fr;
+      column-gap: 4rem;
+      margin-top: 0.5rem;
+    }
+    .hero-title { margin-top: 1.25rem; }
+    .hero-sub { margin-top: 1.25rem; font-size: 1.1875rem; }
+    .hero-cta { margin-top: 2rem; }
+    .hero-ins { margin-top: 1.5rem; align-self: start; max-width: none; }
+    .hero-photo { margin-top: 0; }
+    .hero-photo-frame { aspect-ratio: 4 / 4.4; border-radius: 2.5rem; }
+
+    /* Hang from the lowest point of the third swag: x = 83.3%, y = padding + top(8) + sag(34). */
+    .hero-tag {
+      position: absolute;
+      z-index: 2;
+      left: 83.333%;
+      top: calc(4.5rem + 8px + 34px - 6px);
+      translate: -50% 0;
+      margin: 0;
+      max-width: none;
+      --tag-delay: 1.5s;
+    }
+    .hero-tag :global(.price-tag) { --twine: 60px; }
+    .hero-tag :global(.tag-body) { min-width: 13.5rem; padding: 1.75rem 1.75rem 1.5rem; }
+    .hero-tag :global(.tag-label) { font-size: 0.6875rem; }
+    .hero-tag :global(.tag-amount) { font-size: 6rem; }
+    .hero-tag :global(.tag-unit) { font-size: 1rem; }
+    .photo-credit { right: auto; left: 1.25rem; top: 0.875rem; }
+  }
+</style>

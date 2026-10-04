@@ -1,0 +1,239 @@
+---
+import { getImage, Picture } from 'astro:assets';
+import { gallery } from '../data/gallery';
+import Icon from './Icon.astro';
+
+// Full-size versions for the lightbox (generated at build time).
+const items = await Promise.all(
+  gallery.map(async (photo) => {
+    const full = await getImage({ src: photo.src, width: 1600, format: 'webp', quality: 78 });
+    return { ...photo, full: full.src };
+  }),
+);
+const hasPlaceholders = gallery.some((p) => p.credit);
+---
+
+<section id="gallery" class="sheet bg-snow pt-16 pb-24 lg:pt-24 lg:pb-32">
+  <div class="container-x">
+    <div class="mx-auto max-w-2xl text-center" data-stagger="90">
+      <p class="eyebrow" data-reveal><span class="eyebrow-dot"></span>Gallery</p>
+      {/* While these are placeholder photos, the copy frames them as inspiration rather than Glossiva's own work. */}
+      <h2 class="section-title mt-4" data-reveal>{hasPlaceholders ? 'Looks we love' : 'Homes we’ve lit up'}</h2>
+      <p class="section-lead mt-4" data-reveal>
+        Classic rooflines, warm wreaths, glowing gardens. A few looks to inspire your display.
+      </p>
+    </div>
+
+    <ul class="gallery" data-lightbox-group>
+      {
+        items.map((photo, i) => (
+          <li class="gallery-item" data-reveal style={`--d:${(i % 4) * 90}ms`}>
+            <button
+              type="button"
+              class="gallery-btn"
+              style={`aspect-ratio:${photo.ratio}`}
+              data-lightbox-item
+              data-full={photo.full}
+              data-alt={photo.alt}
+              data-credit={photo.credit ? `Placeholder photo: ${photo.credit.author}, ${photo.credit.license}` : ''}
+              data-credit-url={photo.credit?.url ?? ''}
+              aria-label={`View larger: ${photo.alt}`}
+            >
+              <Picture
+                src={photo.src}
+                alt={photo.alt}
+                widths={[360, 540, 720]}
+                sizes="(min-width: 1024px) 23vw, 46vw"
+                formats={['avif', 'webp']}
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="gallery-zoom" aria-hidden="true">
+                <Icon name="plus" class="size-5" strokeWidth={2.2} />
+              </span>
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+
+    {
+      hasPlaceholders && (
+        <p class="mt-6 text-center text-xs text-muted">
+          Placeholder photos from Wikimedia Commons, credited in each photo’s full view.
+        </p>
+      )
+    }
+  </div>
+
+  <dialog class="lightbox" data-lightbox aria-label="Photo viewer">
+    <div class="lightbox-stage">
+      <img class="lightbox-img" alt="" data-lightbox-img />
+      <p class="lightbox-caption">
+        <span data-lightbox-alt></span>
+        <a class="lightbox-credit" data-lightbox-credit href="https://commons.wikimedia.org/" target="_blank" rel="noopener"></a>
+      </p>
+    </div>
+    <button type="button" class="lb-btn lb-close" data-lightbox-close aria-label="Close">
+      <Icon name="close" class="size-6" strokeWidth={2} />
+    </button>
+    <button type="button" class="lb-btn lb-prev" data-lightbox-prev aria-label="Previous photo">
+      <Icon name="chevronLeft" class="size-6" strokeWidth={2} />
+    </button>
+    <button type="button" class="lb-btn lb-next" data-lightbox-next aria-label="Next photo">
+      <Icon name="chevronRight" class="size-6" strokeWidth={2} />
+    </button>
+  </dialog>
+</section>
+
+<style>
+  .gallery {
+    margin-top: 2.75rem;
+    columns: 2;
+    column-gap: 0.75rem;
+  }
+  .gallery-item {
+    break-inside: avoid;
+    margin-bottom: 0.75rem;
+  }
+  .gallery-btn {
+    position: relative;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 1.5rem;
+    background: var(--color-oat);
+    box-shadow: var(--shadow-soft);
+    cursor: zoom-in;
+    transform: translateZ(0);
+  }
+  .gallery-btn :global(picture) {
+    display: block;
+    height: 100%;
+  }
+  .gallery-btn :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s var(--ease-soft);
+  }
+  .gallery-zoom {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 999px;
+    background: rgb(255 252 247 / 0.9);
+    color: var(--color-pine);
+    box-shadow: 0 6px 16px -6px rgb(0 0 0 / 0.4);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.4s, transform 0.5s var(--ease-bounce);
+  }
+  @media (hover: hover) {
+    .gallery-btn:hover :global(img) { transform: scale(1.06); }
+    .gallery-btn:hover .gallery-zoom { opacity: 1; transform: none; }
+  }
+  @media (hover: none) {
+    .gallery-zoom { opacity: 1; transform: none; width: 2rem; height: 2rem; }
+  }
+  @media (width >= 64rem) {
+    .gallery { columns: 4; column-gap: 1.25rem; margin-top: 4rem; }
+    .gallery-item { margin-bottom: 1.25rem; }
+    .gallery-btn { border-radius: 1.75rem; }
+  }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    overflow: hidden;
+  }
+  .lightbox::backdrop {
+    background: rgb(28 43 36 / 0.86);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+  .lightbox[open] {
+    display: grid;
+    place-items: center;
+    animation: lb-in 0.45s var(--ease-soft) both;
+  }
+  .lightbox[open]::backdrop { animation: lb-fade 0.4s ease-out both; }
+  .lightbox-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.875rem;
+    width: min(92vw, 72rem);
+    touch-action: pan-y;
+  }
+  .lightbox-img {
+    max-width: 100%;
+    max-height: 78dvh;
+    border-radius: 1.5rem;
+    object-fit: contain;
+    box-shadow: 0 30px 80px -20px rgb(0 0 0 / 0.6);
+    transition: opacity 0.3s, transform 0.4s var(--ease-soft);
+  }
+  .lightbox-img.is-swapping { opacity: 0; transform: scale(0.97); }
+  .lightbox-caption {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding-inline: 1rem;
+    text-align: center;
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+  .lightbox-credit {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: rgb(255 255 255 / 0.7);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .lb-btn {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 999px;
+    background: rgb(255 252 247 / 0.95);
+    color: var(--color-pine);
+    box-shadow: 0 10px 24px -10px rgb(0 0 0 / 0.5);
+    transition: transform 0.4s var(--ease-bounce);
+  }
+  .lb-btn:active { transform: scale(0.92); }
+  .lb-close { top: max(1rem, env(safe-area-inset-top)); right: 1rem; }
+  .lb-prev, .lb-next { bottom: max(1.25rem, env(safe-area-inset-bottom)); }
+  .lb-prev { left: calc(50% - 3.75rem); }
+  .lb-next { right: calc(50% - 3.75rem); }
+  @media (width >= 64rem) {
+    .lb-prev, .lb-next { top: 50%; bottom: auto; translate: 0 -50%; }
+    .lb-prev { left: 1.5rem; }
+    .lb-next { right: 1.5rem; }
+  }
+  @keyframes lb-in {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes lb-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style>

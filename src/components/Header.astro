@@ -1,0 +1,86 @@
+---
+import { nav } from '../data/site';
+import Logo from './Logo.astro';
+---
+
+<header class="site-header fixed inset-x-0 top-0 z-50" data-header>
+  <div class="container-x">
+    <div class="header-inner">
+      <a href="#top" class="logo-link" aria-label="Glossiva Holiday Lighting & Decor, back to top">
+        <Logo eager />
+      </a>
+      <nav aria-label="Main" class="hidden lg:block">
+        <ul class="flex items-center gap-1">
+          {
+            nav.map((item) => (
+              <li>
+                <a href={item.href} class="nav-link">
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <a href="#quote" class="btn btn-primary btn-sm">Get a quote</a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 -1.5rem;
+    z-index: -1;
+    background: linear-gradient(180deg, var(--color-snow) 35%, rgb(255 252 247 / 0));
+    opacity: 0;
+    transition: opacity 0.5s var(--ease-soft);
+    pointer-events: none;
+  }
+  :global(.is-scrolled).site-header::before { opacity: 0.92; }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    height: 3.75rem;
+    margin-top: 0.5rem;
+    padding: 0 0.375rem 0 0.75rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    transition:
+      background-color 0.5s var(--ease-soft),
+      box-shadow 0.5s var(--ease-soft),
+      border-color 0.5s var(--ease-soft);
+  }
+  :global(.is-scrolled) .header-inner {
+    background: rgb(255 252 247 / 0.82);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    backdrop-filter: blur(16px) saturate(1.4);
+    border-color: rgb(232 220 200 / 0.8);
+    box-shadow: 0 10px 30px -14px rgb(70 45 10 / 0.25);
+  }
+  .logo-link {
+    display: inline-flex;
+    border-radius: 999px;
+    padding: 0.25rem;
+  }
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    padding-inline: 1rem;
+    border-radius: 999px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-pine);
+    transition: background-color 0.3s;
+  }
+  @media (hover: hover) {
+    .nav-link:hover { background: rgb(241 229 209 / 0.8); }
+  }
+  @media (width >= 64rem) {
+    .header-inner { height: 4rem; padding-left: 1rem; }
+  }
+</style>

@@ -1,0 +1,202 @@
+---
+import type { Package } from '../data/packages';
+import HouseLights from './HouseLights.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  pkg: Package;
+  previous?: Package;
+}
+const { pkg, previous } = Astro.props;
+const isCustom = pkg.id === 'custom';
+const featured = Boolean(pkg.badge);
+---
+
+<article class:list={['pkg card card-hover', featured && 'pkg--featured', isCustom && 'pkg--custom']} data-reveal>
+  {featured && <span class="pkg-badge">{pkg.badge}</span>}
+
+  <div class="pkg-art">
+    <HouseLights level={pkg.level} id={`house-${pkg.id}`} />
+  </div>
+
+  <div class="pkg-body">
+    <h3 class="pkg-name font-display">{pkg.name}</h3>
+    <p class="pkg-tagline">{pkg.tagline}</p>
+
+    {previous && !isCustom && <p class="pkg-builds">Everything in {previous.name}, plus:</p>}
+    <ul class="pkg-list">
+      {
+        (previous && !isCustom ? pkg.adds : pkg.includes).map((item) => (
+          <li class:list={[previous && !isCustom && 'is-new']}>
+            <span class="pkg-check">
+              <Icon name={previous && !isCustom ? 'plus' : isCustom ? 'sparkle' : 'check'} class="size-3.5" strokeWidth={2.6} />
+            </span>
+            {item}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div class="pkg-foot">
+    <p class:list={['pkg-price', isCustom && 'pkg-price--custom']}>{pkg.priceLine}</p>
+    <a
+      href="#quote"
+      class:list={['btn btn-sm w-full', featured ? 'btn-primary' : 'btn-secondary']}
+      data-package-pick={pkg.id}
+    >
+      {isCustom ? 'Design my display' : `Choose ${pkg.name}`}
+      <Icon name="arrowRight" class="size-4" strokeWidth={2.2} />
+    </a>
+  </div>
+</article>
+
+<style>
+  .pkg {
+    position: relative;
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    grid-template-areas:
+      'art body'
+      'foot foot';
+    column-gap: 1rem;
+    row-gap: 1.125rem;
+    padding: 1.125rem;
+    border-radius: 1.75rem;
+  }
+  .pkg-art {
+    grid-area: art;
+    align-self: start;
+    padding: 0.5rem 0.375rem 0.25rem;
+    border-radius: 1.25rem;
+    background: linear-gradient(180deg, var(--color-snow), var(--color-cream));
+    border: 1px solid var(--color-line);
+  }
+  .pkg-body { grid-area: body; min-width: 0; }
+  .pkg-foot {
+    grid-area: foot;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .pkg-name {
+    font-size: 1.375rem;
+    line-height: 1.1;
+    font-weight: 650;
+    color: var(--color-pine);
+    padding-right: 0.25rem;
+  }
+  .pkg-tagline {
+    margin-top: 0.375rem;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--color-muted);
+  }
+  .pkg-builds {
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-gold-ink);
+  }
+  .pkg-list {
+    margin-top: 0.5rem;
+    display: grid;
+    gap: 0.375rem;
+  }
+  .pkg-builds + .pkg-list { margin-top: 0.375rem; }
+  .pkg-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 650;
+    line-height: 1.35;
+    color: var(--color-ink);
+  }
+  .pkg-check {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    margin-top: 0.05rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 999px;
+    background: rgb(31 74 54 / 0.1);
+    color: var(--color-pine);
+  }
+  .pkg-list li.is-new .pkg-check {
+    background: rgb(244 182 63 / 0.25);
+    color: var(--color-gold-ink);
+  }
+  .pkg-price {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 999px;
+    background: var(--color-cream);
+    font-size: 0.875rem;
+    font-weight: 800;
+    color: var(--color-pine);
+  }
+  .pkg-price--custom { background: rgb(255 217 138 / 0.35); color: var(--color-gold-ink); }
+
+  .pkg-badge {
+    position: absolute;
+    z-index: 1;
+    top: -0.75rem;
+    right: 1.25rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    background: var(--color-cranberry);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    box-shadow: 0 8px 18px -8px rgb(181 54 75 / 0.7);
+  }
+  .pkg--featured {
+    border-color: rgb(212 160 63 / 0.55);
+    box-shadow: var(--shadow-lift), 0 0 0 1px rgb(212 160 63 / 0.25);
+  }
+  /* Custom: a slowly shimmering gold border. */
+  .pkg--custom {
+    overflow: hidden;
+    isolation: isolate;
+    border: 2px solid transparent;
+    background:
+      linear-gradient(#fff, #fff) padding-box,
+      linear-gradient(120deg, #e8c46e, #fbe7b8 35%, #c99536 60%, #f3d48a) border-box;
+  }
+  .pkg--custom::after {
+    content: '';
+    position: absolute;
+    inset: -10% -80%;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(105deg, transparent 42%, rgb(255 236 186 / 0.55) 50%, transparent 58%);
+    transform: translateX(-60%);
+    animation: custom-sheen 7s ease-in-out 1s infinite;
+  }
+  @keyframes custom-sheen {
+    0%, 65% { transform: translateX(-60%); }
+    100% { transform: translateX(60%); }
+  }
+
+  @media (width >= 48rem) {
+    .pkg {
+      grid-template-columns: 1fr;
+      grid-template-areas: 'art' 'body' 'foot';
+      grid-template-rows: auto 1fr auto;
+      padding: 1.25rem 1.25rem 1.5rem;
+      border-radius: 2rem;
+    }
+    .pkg-art { padding: 1.25rem 1.5rem 0.75rem; border-radius: 1.5rem; }
+    .pkg-name { font-size: 1.5rem; }
+  }
+  /* `translate` (not `transform`) so the lift composes with the reveal and hover transforms. */
+  @media (width >= 64rem) {
+    .pkg--featured { translate: 0 -0.75rem; }
+  }
+</style>

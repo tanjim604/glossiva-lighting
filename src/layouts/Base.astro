@@ -1,0 +1,74 @@
+---
+import { Font } from 'astro:assets';
+import '../styles/global.css';
+import { site } from '../data/site';
+import { withBase } from '../utils/url';
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const {
+  title = `${site.name} | Christmas Light Installation in Kamloops`,
+  description = `Christmas light rental with professional installation and January takedown in Kamloops, BC. Roofline lighting at ${site.price.compact}. ${site.insurance.amount} ${site.insurance.label}. Get your free quote.`,
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(withBase('og-image.jpg'), Astro.site);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'HomeAndConstructionBusiness',
+  name: site.name,
+  description,
+  url: new URL(withBase(), Astro.site).href,
+  image: ogImage.href,
+  priceRange: '$$',
+  areaServed: { '@type': 'City', name: site.city },
+  address: { '@type': 'PostalAddress', addressLocality: site.city, addressRegion: site.region, addressCountry: 'CA' },
+  ...(site.phone ? { telephone: site.phone } : {}),
+  ...(site.email ? { email: site.email } : {}),
+};
+---
+
+<!doctype html>
+<html lang="en-CA" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script is:inline>document.documentElement.classList.replace('no-js', 'js');</script>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#fffcf7" />
+    <link rel="icon" href={withBase('favicon-32.png')} type="image/png" sizes="32x32" />
+    <link rel="icon" href={withBase('favicon-192.png')} type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href={withBase('apple-touch-icon.png')} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_CA" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <Font cssVariable="--font-fraunces" preload />
+    <Font cssVariable="--font-jakarta" preload />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body class="bg-snow text-ink antialiased">
+    <slot />
+    <script>
+      import '../scripts/main';
+    </script>
+  </body>
+</html>

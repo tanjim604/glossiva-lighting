@@ -1,0 +1,117 @@
+---
+import { faqs } from '../data/faq';
+import { site, telHref } from '../data/site';
+import Icon from './Icon.astro';
+---
+
+<section id="faq" class="sheet bg-snow pt-16 pb-24 lg:pt-24 lg:pb-32">
+  <div class="container-x">
+    <div class="faq-layout">
+      <div class="faq-intro" data-stagger="90">
+        <p class="eyebrow" data-reveal><span class="eyebrow-dot"></span>FAQ</p>
+        <h2 class="section-title mt-4" data-reveal>Questions, answered</h2>
+        <p class="section-lead mt-4" data-reveal>
+          Everything you need to know about renting your Christmas lights. Still curious? Just ask in your quote request.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-3" data-reveal>
+          <a href="#quote" class="btn btn-primary btn-sm">Get my free quote</a>
+          {
+            site.phone && (
+              <a href={telHref(site.phone)} class="btn btn-secondary btn-sm">
+                <Icon name="phone" class="size-4" /> {site.phone}
+              </a>
+            )
+          }
+        </div>
+      </div>
+
+      <div class="faq-list" data-stagger="60">
+        {
+          faqs.map((item) => (
+            <details class="faq-item" data-accordion data-reveal>
+              <summary class="faq-q">
+                <span>{item.q}</span>
+                <span class="faq-icon" aria-hidden="true">
+                  <Icon name="plus" class="size-4" strokeWidth={2.4} />
+                </span>
+              </summary>
+              <div class="faq-a" data-accordion-content>
+                <p>{item.a}</p>
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-layout {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .faq-list {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .faq-item {
+    border-radius: 1.5rem;
+    background: #fff;
+    border: 1px solid var(--color-line);
+    box-shadow: 0 1px 2px rgb(70 45 10 / 0.04);
+    transition: box-shadow 0.4s var(--ease-soft), border-color 0.4s;
+  }
+  .faq-item[open] {
+    border-color: rgb(212 160 63 / 0.5);
+    box-shadow: var(--shadow-soft);
+  }
+  .faq-q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 3.75rem;
+    padding: 1rem 1rem 1rem 1.25rem;
+    cursor: pointer;
+    list-style: none;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--color-pine);
+    border-radius: 1.5rem;
+  }
+  .faq-q::-webkit-details-marker { display: none; }
+  .faq-icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 999px;
+    background: var(--color-cream);
+    color: var(--color-pine);
+    transition: transform 0.5s var(--ease-bounce), background-color 0.3s, color 0.3s;
+  }
+  .faq-item[open] .faq-icon {
+    transform: rotate(135deg);
+    background: var(--color-cranberry);
+    color: #fff;
+  }
+  .faq-a { overflow: hidden; }
+  .faq-a p {
+    padding: 0 1.25rem 1.25rem;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--color-muted);
+  }
+  @media (hover: hover) {
+    .faq-item:not([open]):hover { border-color: rgb(212 160 63 / 0.45); }
+  }
+  @media (width >= 64rem) {
+    .faq-layout { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 4rem; align-items: start; }
+    .faq-intro { position: sticky; top: 7rem; }
+    .faq-q { padding: 1.125rem 1.25rem 1.125rem 1.5rem; font-size: 1.125rem; }
+    .faq-a p { padding: 0 1.5rem 1.5rem; }
+  }
+</style>
