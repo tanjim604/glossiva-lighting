@@ -24,9 +24,17 @@ const quoteApi = {
   },
 };
 
+// Public URL for share previews and canonical links. On Vercel this is the project's production
+// domain (the .vercel.app address, or your own domain once one is added in Vercel).
+const vercelDomain = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+const siteUrl = isGitHubPages
+  ? 'https://tanjim604.github.io'
+  : vercelDomain
+    ? `https://${vercelDomain}`
+    : 'https://glossiva-lighting.vercel.app';
+
 export default defineConfig({
-  // TODO: replace with the real domain once it's registered (used for OG/canonical URLs).
-  site: isGitHubPages ? 'https://tanjim604.github.io' : 'https://www.glossivalighting.ca',
+  site: siteUrl,
   base: isGitHubPages ? '/glossiva-lighting' : '/',
   output: 'static',
   devToolbar: { enabled: false },
