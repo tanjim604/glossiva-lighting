@@ -12,9 +12,18 @@ interface Props {
   noindex?: boolean;
 }
 
+// October to mid-December: speak to booking for this Christmas. Otherwise stay evergreen.
+const now = new Date();
+const bookingSeason = now.getMonth() >= 9 && (now.getMonth() < 11 || now.getDate() <= 15);
+const year = now.getFullYear();
+
 const {
-  title = `Christmas Light Installation in Kamloops | ${site.name}`,
-  description = `Christmas light installation and January takedown in Kamloops, BC. Rent your lights for the season: roofline ${site.price.compact}, ${site.insurance.amount} insured. Free quotes.`,
+  title = bookingSeason
+    ? `Christmas Light Installation Kamloops ${year} | Glossiva`
+    : `Christmas Light Installation Kamloops | Glossiva`,
+  description = bookingSeason
+    ? `Book Christmas ${year} light installation in Kamloops, BC. Rent lights for the season, we install and take down. ${site.price.compact}, ${site.insurance.amount} insured. Free quotes.`
+    : `Christmas light rental and installation in Kamloops, BC. Rent your lights for the season, we install and take down in January. ${site.price.compact}, ${site.insurance.amount} insured. Free quotes.`,
   noindex = false,
 } = Astro.props;
 
