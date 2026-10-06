@@ -39,7 +39,7 @@ automatically.
 | `hero-blur.jpg` | Hero background (pre-blurred; replace with any blurred photo) |
 | `roofline-gable.jpg`, `wreath-door.jpg`, `trees-bushes-home.jpg`, `custom-display.jpg` | Package cards |
 | `step-quote.jpg`, `step-design.jpg`, `step-install.jpg`, `step-takedown.jpg` | How it works cards |
-| `insured-roof.jpg`, `snowy-house.jpg`, `roofline-street.jpg` | Why Glossiva cards |
+| `insured-shield.png` (owner's image), `snowy-house.jpg`, `roofline-street.jpg` | Why Glossiva cards |
 | Gallery list in `src/data/gallery.ts` | Gallery |
 
 **Logo:** the original is `src/assets/brand/logo.png`. The header uses `logo-mark.png` + `logo-wordmark.png`,
