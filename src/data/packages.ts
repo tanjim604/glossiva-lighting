@@ -2,7 +2,7 @@ import type { ImageMetadata } from 'astro';
 import customDisplay from '../assets/photos/custom-display.jpg';
 import rooflineGable from '../assets/photos/roofline-gable.jpg';
 import treesBushes from '../assets/photos/trees-bushes-home.jpg';
-import wreathDoor from '../assets/photos/wreath-door.jpg';
+import signatureHome from '../assets/photos/signature-home.jpg';
 
 export type PackageId = 'classic' | 'signature' | 'christmas' | 'custom';
 
@@ -10,7 +10,7 @@ export interface Package {
   id: PackageId;
   name: string;
   tier: string;
-  /** Public-domain (CC0) photo; swap for a photo of your own install later. */
+  /** Card photo (owner-supplied or public-domain CC0). */
   image: ImageMetadata;
   imageAlt: string;
   /** Large price line, e.g. "$7", plus the small unit text next to it. */
@@ -33,8 +33,8 @@ export const packages: Package[] = [
     id: 'signature',
     name: 'Signature Home',
     tier: 'Enhanced',
-    image: wreathDoor,
-    imageAlt: 'Front door decorated with a Christmas wreath',
+    image: signatureHome,
+    imageAlt: 'Home with warm white C9 lights along the rooflines and a wreath on the front door',
     price: { main: '$7', unit: '/ ft + wreaths' },
     features: ['Roofline lighting', 'Festive wreaths'],
   },

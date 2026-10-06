@@ -37,7 +37,7 @@ automatically.
 | File | Where it appears |
 |---|---|
 | `hero-blur.jpg` | Hero background (pre-blurred; replace with any blurred photo) |
-| `roofline-gable.jpg`, `wreath-door.jpg`, `trees-bushes-home.jpg`, `custom-display.jpg` | Package cards |
+| `roofline-gable.jpg`, `signature-home.jpg` (owner's photo), `trees-bushes-home.jpg`, `custom-display.jpg` | Package cards |
 | `step-quote.jpg`, `step-design.jpg`, `step-install.jpg`, `step-takedown.jpg` | How it works cards |
 | `insured-shield.jpg` (owner's image), `snowy-house.jpg`, `roofline-street.jpg` | Why Glossiva cards |
 | Gallery list in `src/data/gallery.ts` | Gallery |
