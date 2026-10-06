@@ -4,7 +4,11 @@
 
 export const site = {
   name: 'Glossiva Lighting & Decor',
+  // The name as written on the logo. Use ONE name everywhere (website, Google Business Profile, Facebook).
+  logoName: 'Glossiva Holiday Lighting & Decor',
   shortName: 'Glossiva',
+  /** The live address. Canonical links always point here, whichever copy of the site is being viewed. */
+  url: 'https://glossivalighting.com',
   tagline: 'Christmas light rental & installation in Kamloops, BC',
 
   // The two headline facts.

@@ -2,14 +2,27 @@
 import { faqs } from '../data/faq';
 import { site, telHref } from '../data/site';
 import Icon from './Icon.astro';
+
+// FAQ structured data: the same questions and answers shown below, in a form search engines can read.
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
 ---
+
+<script type="application/ld+json" set:html={JSON.stringify(faqLd)} />
 
 <section id="faq" class="bg-slate-50 py-16 lg:py-20">
   <div class="container-x">
     <div class="grid gap-10 lg:grid-cols-12 lg:gap-16">
       <div class="lg:col-span-4" data-stagger="90">
         <p class="eyebrow" data-reveal>FAQ</p>
-        <h2 class="section-title mt-3" data-reveal>Questions, answered</h2>
+        <h2 class="section-title mt-3" data-reveal>Christmas light installation FAQ</h2>
         <div class="mt-6 flex flex-wrap gap-3" data-reveal>
           <a href="#quote" class="btn btn-primary">Get my free quote</a>
           {

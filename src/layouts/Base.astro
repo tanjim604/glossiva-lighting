@@ -1,6 +1,8 @@
 ---
-import { Font } from 'astro:assets';
+import { Font, getImage } from 'astro:assets';
 import '../styles/global.css';
+import logoFull from '../assets/brand/logo-full.png';
+import { packages } from '../data/packages';
 import { site } from '../data/site';
 import { withBase } from '../utils/url';
 
@@ -11,26 +13,76 @@ interface Props {
 }
 
 const {
-  title = `${site.name} | Christmas Light Installation in Kamloops`,
-  description = `Christmas light rental with professional installation and January takedown in Kamloops, BC. Roofline lighting at ${site.price.compact}. ${site.insurance.amount} ${site.insurance.label}. Get your free quote.`,
+  title = `Christmas Light Installation in Kamloops | ${site.name}`,
+  description = `Christmas light installation and January takedown in Kamloops, BC. Rent your lights for the season: roofline ${site.price.compact}, ${site.insurance.amount} insured. Free quotes.`,
   noindex = false,
 } = Astro.props;
 
-const canonical = new URL(Astro.url.pathname, Astro.site);
+// The GitHub Pages copy is served under a sub-path. It's a preview only, so it's kept out of search results.
+const isPreviewCopy = import.meta.env.BASE_URL !== '/';
+const pagePath = Astro.url.pathname.slice(import.meta.env.BASE_URL.replace(/\/$/, '').length) || '/';
+const canonical = new URL(pagePath, site.url);
 const ogImage = new URL(withBase('og-image.jpg'), Astro.site);
+const logo = await getImage({ src: logoFull, width: 512, format: 'png' });
+const logoUrl = new URL(logo.src, Astro.site).href;
 
+// Structured data: tells Google who the business is, where it works, what it offers and at what price.
+const businessId = `${site.url}/#business`;
+const sameAs = Object.values(site.social).filter(Boolean);
+const rooflinePrice = {
+  '@type': 'UnitPriceSpecification',
+  price: Number(site.price.amount.replace(/\D/g, '')),
+  priceCurrency: 'CAD',
+  unitText: 'per bulb per foot of roofline',
+};
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'HomeAndConstructionBusiness',
-  name: site.name,
-  description,
-  url: new URL(withBase(), Astro.site).href,
-  image: ogImage.href,
-  priceRange: '$$',
-  areaServed: { '@type': 'City', name: site.city },
-  address: { '@type': 'PostalAddress', addressLocality: site.city, addressRegion: site.region, addressCountry: 'CA' },
-  ...(site.phone ? { telephone: site.phone } : {}),
-  ...(site.email ? { email: site.email } : {}),
+  '@graph': [
+    {
+      '@type': 'HomeAndConstructionBusiness',
+      '@id': businessId,
+      name: site.name,
+      alternateName: site.logoName,
+      description,
+      url: `${site.url}/`,
+      logo: logoUrl,
+      image: ogImage.href,
+      priceRange: '$$',
+      areaServed: { '@type': 'City', name: site.city, containedInPlace: { '@type': 'State', name: 'British Columbia' } },
+      address: { '@type': 'PostalAddress', addressLocality: site.city, addressRegion: site.region, addressCountry: 'CA' },
+      ...(site.phone ? { telephone: site.phone } : {}),
+      ...(site.email ? { email: site.email } : {}),
+      ...(sameAs.length ? { sameAs } : {}),
+    },
+    {
+      '@type': 'Service',
+      '@id': `${site.url}/#service`,
+      name: 'Christmas light installation and takedown',
+      serviceType: 'Christmas light installation',
+      description: `Christmas lights rented for the season, professionally installed and taken down in January. Roofline lighting ${site.price.compact}.`,
+      provider: { '@id': businessId },
+      areaServed: { '@type': 'City', name: site.city },
+      offers: { '@type': 'Offer', priceSpecification: rooflinePrice },
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Christmas lighting packages',
+        itemListElement: packages.map((p) => ({
+          '@type': 'Offer',
+          itemOffered: { '@type': 'Service', name: p.name, description: p.features.join(', ') },
+          // Only the roofline-only package is fully priced by the $7 rate; the others add items quoted separately.
+          ...(p.id === 'classic' ? { priceSpecification: rooflinePrice } : {}),
+        })),
+      },
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${site.url}/#website`,
+      url: `${site.url}/`,
+      name: site.name,
+      inLanguage: 'en-CA',
+      publisher: { '@id': businessId },
+    },
+  ],
 };
 ---
 
@@ -43,11 +95,12 @@ const jsonLd = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="robots" content={noindex || isPreviewCopy ? 'noindex, follow' : 'index, follow, max-image-preview:large'} />
     <meta name="theme-color" content="#0f172a" />
     <link rel="icon" href={withBase('favicon-32.png')} type="image/png" sizes="32x32" />
     <link rel="icon" href={withBase('favicon-192.png')} type="image/png" sizes="192x192" />
     <link rel="apple-touch-icon" href={withBase('apple-touch-icon.png')} />
+    {!isPreviewCopy && <link rel="sitemap" href="/sitemap.xml" />}
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
@@ -57,12 +110,14 @@ const jsonLd = {
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.name}: Christmas light installation in Kamloops, ${site.price.compact}`} />
     <meta property="og:locale" content="en_CA" />
     <meta name="twitter:card" content="summary_large_image" />
 
     <Font cssVariable="--font-jakarta" preload />
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <slot name="head" />
   </head>
   <body class="bg-slate-50 text-slate-900 antialiased">
     <slot />

@@ -16,10 +16,10 @@ const stats = [
 ];
 // Short reasons over photos. `focus` keeps the subject visible above the text.
 // `icon` is skipped when the photo already shows it (the shield image).
-const reasons: { icon?: IconName; title: string; text: string; image: ImageMetadata; focus?: string }[] = [
-  { title: `${site.insurance.amount} insured`, text: 'Your home is covered while we work.', image: insuredShield, focus: '62% 30%' },
-  { icon: 'checkCircle', title: 'Nothing to buy', text: 'Rent for the season. We take it back.', image: snowyHouse },
-  { icon: 'calendar', title: 'Done for you', text: 'Design, install and takedown.', image: rooflineStreet },
+const reasons: { icon?: IconName; title: string; text: string; image: ImageMetadata; alt: string; focus?: string }[] = [
+  { title: `${site.insurance.amount} insured`, text: 'Your home is covered while we work.', image: insuredShield, alt: 'Green and gold insurance shield sign outside a home lit with Christmas lights', focus: '62% 30%' },
+  { icon: 'checkCircle', title: 'Nothing to buy', text: 'Rent for the season. We take it back.', image: snowyHouse, alt: 'Two-storey house in the snow' },
+  { icon: 'calendar', title: 'Done for you', text: 'Design, install and takedown.', image: rooflineStreet, alt: 'Homes with rooflines outlined in Christmas lights at night' },
 ];
 ---
 
@@ -54,7 +54,7 @@ const reasons: { icon?: IconName; title: string; text: string; image: ImageMetad
           <div class="reason card-lift" data-reveal>
             <Picture
               src={r.image}
-              alt=""
+              alt={r.alt}
               widths={[480, 720, 960]}
               sizes="(min-width: 768px) 32vw, calc(100vw - 2rem)"
               formats={['avif', 'webp']}

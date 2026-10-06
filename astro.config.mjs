@@ -31,7 +31,7 @@ const siteUrl = isGitHubPages
   ? 'https://tanjim604.github.io'
   : vercelDomain
     ? `https://${vercelDomain}`
-    : 'https://glossiva-lighting.vercel.app';
+    : 'https://glossivalighting.com';
 
 export default defineConfig({
   site: siteUrl,
