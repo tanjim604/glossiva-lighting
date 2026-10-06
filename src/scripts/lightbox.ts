@@ -6,7 +6,6 @@ export function initLightbox() {
 
   const img = dialog.querySelector<HTMLImageElement>('[data-lightbox-img]')!;
   const altText = dialog.querySelector<HTMLElement>('[data-lightbox-alt]')!;
-  const credit = dialog.querySelector<HTMLAnchorElement>('[data-lightbox-credit]')!;
   let index = 0;
   let opener: HTMLElement | null = null;
   let swiped = false;
@@ -18,9 +17,6 @@ export function initLightbox() {
       img.src = t.full ?? '';
       img.alt = t.alt ?? '';
       altText.textContent = t.alt ?? '';
-      credit.textContent = t.credit ?? '';
-      credit.hidden = !t.credit;
-      if (t.creditUrl) credit.href = t.creditUrl;
       img.classList.remove('is-swapping');
     };
     if (!animate) return apply();

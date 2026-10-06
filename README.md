@@ -30,11 +30,17 @@ Almost everything you'd change lives in `src/data/`:
 Empty `phone`, `email` and social values are hidden automatically. Fill them in and they appear in the footer,
 FAQ and thank-you message.
 
-**Replacing the placeholder photos:** put your photos in `src/assets/gallery/` (and `src/assets/hero/` for the
-hero), update the imports in `src/data/gallery.ts`, and delete each photo's `credit`. The "Placeholder photo
-credits" in the footer disappear once no credits are left; for the hero photo, set `heroCredit` to `null` in
-`src/data/gallery.ts`. The gallery heading switches from "Looks we love" to
-"Homes we've lit up" automatically.
+**Photos** live in `src/assets/photos/`. They're public-domain (CC0) stand-ins, so no credits are needed. To use your
+own (or AI-generated) images, replace a file **with the same name** and push. Astro resizes and compresses it
+automatically.
+
+| File | Where it appears |
+|---|---|
+| `hero-blur.jpg` | Hero background (pre-blurred; replace with any blurred photo) |
+| `roofline-gable.jpg`, `wreath-door.jpg`, `trees-bushes-home.jpg`, `custom-display.jpg` | Package cards |
+| `step-quote.jpg`, `step-design.jpg`, `step-install.jpg`, `step-takedown.jpg` | How it works cards |
+| `insured-roof.jpg`, `snowy-house.jpg`, `roofline-street.jpg` | Why Glossiva cards |
+| Gallery list in `src/data/gallery.ts` | Gallery |
 
 **Logo:** the original is `src/assets/brand/logo.png`. The header uses `logo-mark.png` + `logo-wordmark.png`,
 cropped from it; the footer uses `logo-full.png`.

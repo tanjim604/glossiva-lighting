@@ -5,11 +5,6 @@ import { site, telHref } from '../data/site';
 import Icon from './Icon.astro';
 import { withBase } from '../utils/url';
 
-const nextSteps = [
-  'We review your home and lighting wishes.',
-  `We send your free quote ${site.responseTime}.`,
-  'You pick your install date. That’s it.',
-];
 // Absolute endpoints (another host) are used as-is; site paths get the deploy base.
 const endpoint = QUOTE_ENDPOINT ? (/^https?:/.test(QUOTE_ENDPOINT) ? QUOTE_ENDPOINT : withBase(QUOTE_ENDPOINT)) : '';
 const notConnectedText = site.phone
@@ -20,15 +15,13 @@ const errorFallback = site.phone
   : 'Something went wrong sending your request. Please try again in a moment.';
 ---
 
-<section id="quote" class="border-b border-slate-200 bg-white py-20 lg:py-24">
+<section id="quote" class="border-b border-slate-200 bg-white py-16 lg:py-20">
   <div class="container-x">
     <div class="quote-layout">
       <div class="quote-intro" data-stagger="90">
         <p class="eyebrow" data-reveal>Free quote</p>
-        <h2 class="section-title mt-3" data-reveal>Get your free lighting quote</h2>
-        <p class="section-lead mt-4" data-reveal>
-          Tell us a little about your home and we’ll send a clear quote. No obligation, no surprise charges.
-        </p>
+        <h2 class="section-title mt-3" data-reveal>Get your free quote</h2>
+        <p class="section-lead mt-3" data-reveal>No obligation. We reply {site.responseTime}.</p>
         <div class="mt-6 flex flex-wrap gap-3" data-reveal>
           <p class="inline-flex items-baseline gap-1.5 rounded-lg border-2 border-amber-400 bg-white px-4 py-2 font-extrabold text-slate-900">
             <span class="text-2xl text-brand-700">{site.price.amount}</span>
@@ -41,19 +34,6 @@ const errorFallback = site.phone
         </div>
       </div>
 
-      <div class="next-steps" data-reveal>
-        <p class="text-xs font-extrabold tracking-[0.14em] text-slate-500 uppercase">What happens next</p>
-        <ol class="grid gap-3.5">
-          {
-            nextSteps.map((step, i) => (
-              <li class="flex items-center gap-3 text-sm font-semibold text-slate-700">
-                <span class="grid size-8 shrink-0 place-items-center rounded-lg bg-brand-700 text-sm font-extrabold text-white">{i + 1}</span>
-                {step}
-              </li>
-            ))
-          }
-        </ol>
-      </div>
 
       <div class="form-card" data-reveal>
         <form
@@ -113,7 +93,7 @@ const errorFallback = site.phone
                 name="notes"
                 rows="3"
                 maxlength="1000"
-                placeholder="Two-storey home, light colour preference (warm white or multi-colour), trees out front…"></textarea>
+                placeholder="e.g. two-storey home, warm white lights"></textarea>
             </div>
           </div>
 
@@ -157,16 +137,11 @@ const errorFallback = site.phone
   .quote-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: 'intro' 'form' 'steps';
+    grid-template-areas: 'intro' 'form';
     gap: 2rem;
   }
   .quote-intro { grid-area: intro; }
   .form-card { grid-area: form; }
-  .next-steps {
-    grid-area: steps;
-    display: grid;
-    gap: 0.875rem;
-  }
 
   .form-card {
     border-radius: 1rem;
@@ -292,8 +267,8 @@ const errorFallback = site.phone
   @media (width >= 64rem) {
     .quote-layout {
       grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-      grid-template-areas: 'intro form' 'steps form';
-      grid-template-rows: auto 1fr;
+      grid-template-areas: 'intro form';
+      align-items: center;
       column-gap: 4rem;
       row-gap: 2.5rem;
       align-items: start;

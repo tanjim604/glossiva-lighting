@@ -1,4 +1,9 @@
 ---
+import type { ImageMetadata } from 'astro';
+import { Picture } from 'astro:assets';
+import insuredRoof from '../assets/photos/insured-roof.jpg';
+import rooflineStreet from '../assets/photos/roofline-street.jpg';
+import snowyHouse from '../assets/photos/snowy-house.jpg';
 import { site } from '../data/site';
 import Icon, { type IconName } from './Icon.astro';
 
@@ -6,41 +11,30 @@ import Icon, { type IconName } from './Icon.astro';
 const stats = [
   { value: site.price.amount, label: 'Per bulb / ft' },
   { value: site.insurance.amount, label: 'Insurance coverage' },
-  { value: '4', label: 'Packages to choose from' },
-  { value: 'Free', label: 'No-obligation quotes' },
+  { value: '4', label: 'Packages' },
+  { value: 'Free', label: 'Quotes' },
 ];
-const reasons: { icon: IconName; title: string; text: string }[] = [
-  {
-    icon: 'shield',
-    title: 'Fully insured',
-    text: `We carry ${site.insurance.amount} in insurance coverage, so you have peace of mind while our crew works on your home.`,
-  },
-  {
-    icon: 'checkCircle',
-    title: 'Nothing to buy or store',
-    text: 'You rent the lights for the season. We take everything back in January, so there’s nothing to untangle or store.',
-  },
-  {
-    icon: 'calendar',
-    title: 'Done for you',
-    text: 'Design, installation and January takedown are all handled by our team. You just enjoy the glow.',
-  },
+// Short reasons over photos (public-domain stand-ins).
+const reasons: { icon: IconName; title: string; text: string; image: ImageMetadata }[] = [
+  { icon: 'shield', title: `${site.insurance.amount} insured`, text: 'Your home is covered while we work.', image: insuredRoof },
+  { icon: 'checkCircle', title: 'Nothing to buy', text: 'Rent for the season. We take it back.', image: snowyHouse },
+  { icon: 'calendar', title: 'Done for you', text: 'Design, install and takedown.', image: rooflineStreet },
 ];
 ---
 
-<section id="why" class="border-b border-slate-200 bg-white py-20 lg:py-24">
+<section id="why" class="border-b border-slate-200 bg-white py-16 lg:py-20">
   <div class="container-x">
     <div class="mx-auto max-w-3xl text-center" data-stagger="90">
       <p class="eyebrow" data-reveal>Why Glossiva</p>
-      <h2 class="section-title mt-3" data-reveal>Simple pricing. Fully insured. Done for you.</h2>
+      <h2 class="section-title mt-3" data-reveal>Simple. Insured. Done for you.</h2>
     </div>
 
-    <dl class="mt-12 grid grid-cols-2 overflow-hidden rounded-xl border border-slate-200 bg-white lg:grid-cols-4" data-reveal>
+    <dl class="mt-10 grid grid-cols-2 overflow-hidden rounded-xl border border-slate-200 bg-white lg:mt-12 lg:grid-cols-4" data-reveal>
       {
         stats.map((s, i) => (
           <div
             class:list={[
-              'flex flex-col gap-1 p-6 text-center',
+              'flex flex-col gap-1 p-5 text-center sm:p-6',
               i % 2 === 1 && 'border-l border-slate-200',
               i >= 2 && 'border-t border-slate-200 lg:border-t-0',
               i === 2 && 'lg:border-l',
@@ -53,18 +47,65 @@ const reasons: { icon: IconName; title: string; text: string }[] = [
       }
     </dl>
 
-    <div class="mt-8 grid gap-5 md:grid-cols-3" data-stagger="110">
+    <div class="mt-6 grid gap-5 md:grid-cols-3" data-stagger="110">
       {
         reasons.map((r) => (
-          <div class="card-lift rounded-xl border border-slate-200 bg-white p-7 shadow-sm" data-reveal>
-            <span class="grid size-11 place-items-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-100">
-              <Icon name={r.icon} class="size-5.5" strokeWidth={2} />
-            </span>
-            <h3 class="mt-5 text-lg font-extrabold text-slate-900">{r.title}</h3>
-            <p class="mt-2 text-sm leading-relaxed font-medium text-slate-600">{r.text}</p>
+          <div class="reason card-lift" data-reveal>
+            <Picture
+              src={r.image}
+              alt=""
+              widths={[480, 720, 960]}
+              sizes="(min-width: 768px) 32vw, calc(100vw - 2rem)"
+              formats={['avif', 'webp']}
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="reason-body">
+              <span class="grid size-11 place-items-center rounded-lg bg-white/15 text-white ring-1 ring-white/30 backdrop-blur-sm">
+                <Icon name={r.icon} class="size-5.5" strokeWidth={2} />
+              </span>
+              <h3 class="mt-4 text-xl font-extrabold text-white">{r.title}</h3>
+              <p class="mt-1 text-sm font-medium text-slate-200">{r.text}</p>
+            </div>
           </div>
         ))
       }
     </div>
   </div>
 </section>
+
+<style>
+  /* Photo-background cards: the image fills the card under a dark gradient so the text stays readable. */
+  .reason {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: flex-end;
+    min-height: 15rem;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    background: var(--color-slate-800);
+  }
+  .reason :global(picture) {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+  }
+  .reason :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reason::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgb(15 23 42 / 0.15) 0%, rgb(15 23 42 / 0.55) 45%, rgb(15 23 42 / 0.9) 100%);
+  }
+  .reason-body { padding: 1.5rem; }
+  @media (hover: hover) {
+    .reason:hover :global(img) { transform: scale(1.05); }
+  }
+</style>

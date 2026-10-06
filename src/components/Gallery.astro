@@ -10,18 +10,13 @@ const items = await Promise.all(
     return { ...photo, full: full.src };
   }),
 );
-const hasPlaceholders = gallery.some((p) => p.credit);
 ---
 
-<section id="gallery" class="border-b border-slate-200 bg-slate-50 py-20 lg:py-24">
+<section id="gallery" class="border-b border-slate-200 bg-slate-50 py-16 lg:py-20">
   <div class="container-x">
     <div class="mx-auto max-w-2xl text-center" data-stagger="90">
       <p class="eyebrow" data-reveal>Gallery</p>
-      {/* While these are placeholder photos, the copy frames them as inspiration rather than Glossiva's own work. */}
-      <h2 class="section-title mt-3" data-reveal>{hasPlaceholders ? 'Looks we love' : 'Homes we’ve lit up'}</h2>
-      <p class="section-lead mt-4" data-reveal>
-        Classic rooflines, warm wreaths, glowing gardens. A few looks to inspire your display.
-      </p>
+      <h2 class="section-title mt-3" data-reveal>Looks we love</h2>
     </div>
 
     <ul class="gallery" data-lightbox-group>
@@ -34,15 +29,13 @@ const hasPlaceholders = gallery.some((p) => p.credit);
               data-lightbox-item
               data-full={photo.full}
               data-alt={photo.alt}
-              data-credit={photo.credit ? `Placeholder photo: ${photo.credit.author}, ${photo.credit.license}` : ''}
-              data-credit-url={photo.credit?.url ?? ''}
               aria-label={`View larger: ${photo.alt}`}
             >
               <Picture
                 src={photo.src}
                 alt={photo.alt}
                 widths={[360, 540, 720]}
-                sizes="(min-width: 1024px) 23vw, 46vw"
+                sizes="(min-width: 1024px) 31vw, 46vw"
                 formats={['avif', 'webp']}
                 loading="lazy"
                 decoding="async"
@@ -56,22 +49,12 @@ const hasPlaceholders = gallery.some((p) => p.credit);
       }
     </ul>
 
-    {
-      hasPlaceholders && (
-        <p class="mt-6 text-center text-xs text-slate-500">
-          Placeholder photos from Wikimedia Commons, credited in each photo’s full view.
-        </p>
-      )
-    }
   </div>
 
   <dialog class="lightbox" data-lightbox aria-label="Photo viewer">
     <div class="lightbox-stage">
       <img class="lightbox-img" alt="" data-lightbox-img />
-      <p class="lightbox-caption">
-        <span data-lightbox-alt></span>
-        <a class="lightbox-credit" data-lightbox-credit href="https://commons.wikimedia.org/" target="_blank" rel="noopener"></a>
-      </p>
+      <p class="lightbox-caption" data-lightbox-alt></p>
     </div>
     <button type="button" class="lb-btn lb-close" data-lightbox-close aria-label="Close">
       <Icon name="close" class="size-6" strokeWidth={2} />
@@ -88,7 +71,7 @@ const hasPlaceholders = gallery.some((p) => p.credit);
 <style>
   /* A clean, even grid: 2 columns on phones, 4 on desktop. */
   .gallery {
-    margin-top: 3rem;
+    margin-top: 2.5rem;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.75rem;
@@ -137,7 +120,7 @@ const hasPlaceholders = gallery.some((p) => p.credit);
     .gallery-zoom { opacity: 1; transform: none; width: 2rem; height: 2rem; }
   }
   @media (width >= 64rem) {
-    .gallery { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; margin-top: 3.5rem; }
+    .gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 3rem; }
   }
 
   /* Lightbox */
@@ -192,13 +175,6 @@ const hasPlaceholders = gallery.some((p) => p.credit);
     text-align: center;
     font-size: 0.9375rem;
     font-weight: 600;
-  }
-  .lightbox-credit {
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: rgb(255 255 255 / 0.7);
-    text-decoration: underline;
-    text-underline-offset: 2px;
   }
   .lb-btn {
     position: absolute;

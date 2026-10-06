@@ -1,24 +1,19 @@
 ---
 import { packages, packagesFootnote } from '../data/packages';
-import { site } from '../data/site';
 import PackageCard from './PackageCard.astro';
 ---
 
-<section id="packages" class="border-b border-slate-200 bg-white py-20 lg:py-24">
+<section id="packages" class="border-b border-slate-200 bg-white py-16 lg:py-20">
   <div class="container-x">
     <div class="mx-auto max-w-3xl text-center" data-stagger="90">
       <p class="eyebrow" data-reveal>Packages</p>
-      <h2 class="section-title mt-3" data-reveal>Choose your holiday package</h2>
-      <p class="section-lead mt-4" data-reveal>
-        Every package builds on the one before, and every roofline is {site.price.compact}. Pick a starting point and
-        we’ll tailor it to your home in your free quote.
-      </p>
+      <h2 class="section-title mt-3" data-reveal>Choose your package</h2>
     </div>
 
-    <div class="mt-14 grid gap-8 md:grid-cols-2 lg:grid-cols-4 lg:gap-6" data-stagger="110">
+    <div class="mt-10 grid gap-6 md:grid-cols-2 lg:mt-12 lg:grid-cols-4" data-stagger="110">
       {packages.map((pkg) => <PackageCard pkg={pkg} />)}
     </div>
 
-    <p class="mx-auto mt-10 max-w-xl text-center text-xs font-medium text-slate-500" data-reveal>{packagesFootnote}</p>
+    <p class="mt-8 text-center text-xs font-medium text-slate-500" data-reveal>{packagesFootnote}</p>
   </div>
 </section>

@@ -1,167 +1,122 @@
 ---
 import { Picture } from 'astro:assets';
-import heroImg from '../assets/hero/hero-home.jpg';
-import { heroCredit } from '../data/gallery';
+import heroBg from '../assets/photos/hero-blur.jpg';
 import { site } from '../data/site';
 import Icon from './Icon.astro';
-
-const proof = [
-  { icon: 'shield', text: `${site.insurance.amount} insurance coverage` },
-  { icon: 'calendar', text: 'January takedown included' },
-  { icon: 'checkCircle', text: 'Rental: nothing to buy or store' },
-] as const;
 ---
 
-<section id="top" class="hero relative overflow-hidden border-b border-slate-200 bg-gradient-to-b from-slate-50 to-white">
-  <div class="container-x py-10 sm:py-14 lg:py-20">
+<section id="top" class="hero relative isolate overflow-hidden bg-slate-900 text-white">
+  {/* Pre-blurred at build time (src/assets/photos/hero-blur.jpg): no CSS filter cost, and a tiny file. */}
+  <Picture
+    src={heroBg}
+    alt=""
+    widths={[640, 960, 1280, 1600]}
+    sizes="100vw"
+    formats={['avif', 'webp']}
+    loading="eager"
+    fetchpriority="high"
+    class="hero-bg"
+  />
+  <div class="absolute inset-0 -z-10 bg-gradient-to-b from-slate-950/55 via-slate-950/40 to-slate-950/75" aria-hidden="true"></div>
+  <div class="absolute inset-0 -z-10 hidden bg-gradient-to-r from-slate-950/70 via-slate-950/30 to-transparent lg:block" aria-hidden="true"></div>
+
+  <div class="container-x py-14 sm:py-20 lg:py-28">
     <div class="hero-grid">
       <div class="hero-intro">
-        <p class="hero-in inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3.5 py-1.5 text-[0.6875rem] font-extrabold tracking-[0.14em] text-brand-700 uppercase" style="--d:0ms">
+        <p class="hero-in inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-[0.6875rem] font-extrabold tracking-[0.14em] text-amber-200 uppercase backdrop-blur-sm" style="--d:0ms">
           <Icon name="pin" class="size-3.5" strokeWidth={2.4} />
-          <span class="sm:hidden">Christmas lights · {site.city}, {site.region}</span>
-          <span class="hidden sm:inline">Christmas light installation · {site.city}, {site.region}</span>
+          {site.city}, {site.region}
         </p>
-
-        <h1 class="hero-in mt-5 text-[2.25rem] leading-[1.05] font-extrabold tracking-tight text-slate-900 sm:text-5xl lg:text-[3.5rem]" style="--d:80ms">
-          Professional Christmas lighting, <span class="text-brand-700">without the ladder.</span>
+        <h1 class="hero-in mt-5 text-[2.5rem] leading-[1.03] font-extrabold tracking-tight sm:text-5xl lg:text-6xl" style="--d:80ms">
+          Christmas lights,<br />
+          <span class="text-amber-300">without the ladder.</span>
         </h1>
-
-        <p class="hero-in mt-5 max-w-xl text-base leading-relaxed font-medium text-slate-600 sm:text-lg" style="--d:160ms">
-          We design, install, and take down your Christmas lights. You rent them for the season, so there’s nothing to
-          buy, untangle, or store.
+        <p class="hero-in mt-4 text-lg font-medium text-slate-200" style="--d:160ms">
+          Installed and taken down for you.
         </p>
       </div>
 
-      <div class="hero-actions hero-in" style="--d:240ms">
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-          {/* Below desktop the $7 card just above already carries the main CTA. */}
-          <a href="#quote" class="btn btn-primary btn-lg hidden lg:inline-flex">
-            Get my free quote <Icon name="arrowRight" class="size-4" strokeWidth={2.4} />
-          </a>
-          <a href="#packages" class="btn btn-outline btn-lg">View packages</a>
-        </div>
-        <ul class="mt-7 grid gap-3 border-t border-slate-200 pt-6 text-sm font-semibold text-slate-700 sm:flex sm:flex-wrap sm:gap-x-6">
-          {
-            proof.map((p) => (
-              <li class="inline-flex items-center gap-2">
-                <Icon name={p.icon} class="size-4.5 text-brand-600" strokeWidth={2} />
-                {p.text}
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-
-      <figure class="hero-media hero-in" style="--d:120ms">
-        <div class="relative overflow-hidden rounded-2xl bg-slate-200 shadow-xl ring-1 ring-slate-900/5">
-          <Picture
-            src={heroImg}
-            alt="Two-storey home with warm white C9 bulbs along every roofline, wreaths and garland, on a snowy night"
-            widths={[480, 640, 800, 960, 1280]}
-            sizes="(min-width: 1024px) 46vw, calc(100vw - 2rem)"
-            formats={['avif', 'webp']}
-            loading="eager"
-            fetchpriority="high"
-            class="hero-photo"
-          />
-          {
-            heroCredit && (
-              <a class="photo-credit" href={heroCredit.url} target="_blank" rel="noopener">
-                Placeholder photo: {heroCredit.author}, {heroCredit.license}
-              </a>
-            )
-          }
-        </div>
-      </figure>
-
-      <aside class="hero-card hero-in" style="--d:300ms" aria-label="Pricing">
+      <aside class="hero-card hero-in" style="--d:220ms" aria-label="Pricing">
         <div class="price-card">
-          <div class="flex items-center justify-between gap-3">
-            <span class="text-[0.6875rem] font-extrabold tracking-[0.14em] text-slate-500 uppercase">Roofline lighting</span>
-            <span class="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-1 text-[0.625rem] font-extrabold tracking-wider text-amber-900 uppercase">
-              <Icon name="tag" class="size-3" strokeWidth={2.6} /> Simple pricing
-            </span>
-          </div>
-          <p class="mt-2 flex items-baseline gap-2 leading-none font-extrabold text-slate-900">
-            <span class="text-[4.5rem] tracking-tighter text-brand-700 sm:text-[5rem]">{site.price.amount}</span>
-            <span class="text-xl font-bold text-slate-700">/ bulb / ft</span>
+          <p class="text-[0.6875rem] font-extrabold tracking-[0.14em] text-amber-200 uppercase">Roofline lighting</p>
+          <p class="mt-1 flex items-baseline gap-2 leading-none font-extrabold">
+            <span class="text-[4.5rem] tracking-tighter text-white sm:text-[5rem]">{site.price.amount}</span>
+            <span class="text-xl font-bold text-slate-200">/ bulb / ft</span>
           </p>
-          <p class="mt-3 text-sm font-medium text-slate-600">Measured along your roofline. Your free quote shows the exact total.</p>
           <a href="#quote" class="btn btn-primary mt-5 w-full" data-hero-cta>
-            Get my $7/ft quote <Icon name="arrowRight" class="size-4" strokeWidth={2.4} />
+            Get my free quote <Icon name="arrowRight" class="size-4" strokeWidth={2.4} />
           </a>
         </div>
       </aside>
+
+      <div class="hero-actions hero-in" style="--d:300ms">
+        <div class="flex flex-wrap items-center gap-3">
+          <a href="#packages" class="btn btn-ghost">View packages</a>
+          <span class="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-bold backdrop-blur-sm">
+            <Icon name="shield" class="size-5 text-amber-300" strokeWidth={2} />
+            {site.insurance.amount} insured
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-  /* Phones: intro → $7 card → buttons → photo, so the price shows without scrolling.
-     Desktop: copy and buttons on the left; photo on the right with the $7 card overlapping it. */
+  .hero :global(picture) {
+    position: absolute;
+    inset: 0;
+    z-index: -20;
+  }
+  .hero :global(.hero-bg) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 60%;
+    animation: settle 2.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Phones: text → $7 card → secondary actions. Desktop: text and actions left, $7 card right. */
   .hero-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: 'intro' 'card' 'actions' 'media';
+    grid-template-areas: 'intro' 'card' 'actions';
     gap: 1.75rem;
   }
   .hero-intro { grid-area: intro; }
   .hero-card { grid-area: card; }
   .hero-actions { grid-area: actions; }
-  .hero-media { grid-area: media; }
-
-  .hero-media :global(picture) { display: block; }
-  .hero-media :global(.hero-photo) {
-    display: block;
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    object-position: 45% 60%;
-    animation: settle 2.4s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
 
   .price-card {
-    position: relative;
+    max-width: 24rem;
     border-radius: 1rem;
-    border: 2px solid var(--color-amber-400);
-    background: #fff;
+    border: 2px solid rgb(251 191 36 / 0.85);
+    background: rgb(15 23 42 / 0.45);
     padding: 1.25rem 1.25rem 1.375rem;
-    box-shadow: 0 20px 45px -20px rgb(15 23 42 / 0.35);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 20px 45px -20px rgb(0 0 0 / 0.6);
   }
 
-  .photo-credit {
-    position: absolute;
-    right: 0.75rem;
-    top: 0.625rem;
-    font-size: 0.625rem;
-    color: rgb(255 255 255 / 0.75);
-    text-shadow: 0 1px 2px rgb(0 0 0 / 0.6);
+  .hero :global(.btn-ghost) {
+    background: rgb(255 255 255 / 0.1);
+    color: #fff;
+    border: 1px solid rgb(255 255 255 / 0.3);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
   }
 
-  @media (width >= 40rem) {
-    .hero-card { max-width: 24rem; }
-  }
   @media (width >= 64rem) {
     .hero-grid {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
       grid-template-areas:
-        'intro media'
-        'actions media';
+        'intro card'
+        'actions card';
       grid-template-rows: auto 1fr;
       column-gap: 4rem;
       row-gap: 2rem;
       align-items: start;
     }
-    .hero-media { align-self: center; padding-bottom: 3.5rem; }
-    .hero-media :global(.hero-photo) { aspect-ratio: 5 / 4; }
-    /* Overlaps the bottom-left corner of the photo. */
-    .hero-card {
-      grid-area: media;
-      align-self: end;
-      justify-self: start;
-      z-index: 1;
-      width: 21rem;
-      margin-left: -2.5rem;
-    }
+    .hero-card { align-self: center; justify-self: end; width: 100%; max-width: 24rem; }
   }
 </style>
