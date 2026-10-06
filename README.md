@@ -64,7 +64,7 @@ GitHub Pages only hosts static files, so **the quote form can't send email there
 "not switched on yet" message instead of losing the request silently. Use Vercel (below) before pointing ads
 at the site.
 
-### Vercel (live site with working quote form): https://glossiva-lighting.vercel.app
+### Vercel (live site with working quote form): https://glossivalighting.com
 
 The Vercel project `glossiva-lighting` (team "tanjim604's projects") is connected to this GitHub repo, so every
 push to `main` redeploys automatically. It builds the default target, which includes the `/api/quote` email
@@ -75,4 +75,8 @@ Resend account as the Glossiva Detailing site. To change the address, edit the v
 Settings → Environment Variables and redeploy. Resend's free test sender (`onboarding@resend.dev`) only delivers
 to the Resend account's own email, so a different address needs a domain verified in Resend.
 
-The site's public URL comes from Vercel automatically; add a custom domain in Vercel and links switch to it.
+The custom domain **glossivalighting.com** (registered at Namecheap) points at Vercel with two A records
+(`@` → 216.198.79.1 and 64.29.17.1) and a CNAME (`www` → `03df2297212c9cb9.vercel-dns-017.com`).
+`www.glossivalighting.com` and `glossiva-lighting.vercel.app` both lead to the same site; www redirects to the bare
+domain. HTTPS certificates are issued and renewed by Vercel automatically. Share and canonical URLs come from
+Vercel's production domain, so they use glossivalighting.com.
