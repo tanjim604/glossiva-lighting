@@ -69,7 +69,7 @@ const jsonLd = {
         itemListElement: packages.map((p) => ({
           '@type': 'Offer',
           itemOffered: { '@type': 'Service', name: p.name, description: p.features.join(', ') },
-          // Only the roofline-only package is fully priced by the $7 rate; the others add items quoted separately.
+          // Only the roofline-only package is fully priced by the $8 rate; the others add items quoted separately.
           ...(p.id === 'classic' ? { priceSpecification: rooflinePrice } : {}),
         })),
       },

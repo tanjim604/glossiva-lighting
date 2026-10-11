@@ -22,7 +22,7 @@ Almost everything you'd change lives in `src/data/`:
 
 | File | What's in it |
 |---|---|
-| `src/data/site.ts` | Price ($7/bulb/ft), insurance ($3M), phone, email, service area, social links, response-time promise |
+| `src/data/site.ts` | Price ($8/bulb/ft), insurance ($3M), phone, email, service area, social links, response-time promise |
 | `src/data/packages.ts` | The four packages and the pricing footnote |
 | `src/data/faq.ts` | FAQ questions and answers |
 | `src/data/gallery.ts` | Gallery photos (currently placeholders) |

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* Palette: white and light grey surfaces, slate text, one brand colour (the logo's green),
-   and gold only as an accent for the $7 price. */
+   and gold only as an accent for the $8 price. */
 @theme {
   --color-brand-50: #effaf2;
   --color-brand-100: #d7f0de;
