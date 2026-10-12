@@ -3,8 +3,8 @@
 
 export const faqs: { q: string; a: string }[] = [
   {
-    q: 'What does $7/bulb/ft mean?',
-    a: 'Roofline lighting is priced at $7 per bulb per foot of roofline. Your free quote lists your exact footage and total before anything is booked.',
+    q: 'What does $8/bulb/ft mean?',
+    a: 'Roofline lighting is priced at $8 per bulb per foot of roofline. Your free quote lists your exact footage and total before anything is booked.',
   },
   {
     q: 'When do you install and take the lights down?',

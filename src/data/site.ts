@@ -13,10 +13,10 @@ export const site = {
 
   // The two headline facts.
   price: {
-    amount: '$7',
+    amount: '$8',
     unit: 'per bulb / ft',
-    compact: '$7/bulb/ft',
-    short: '$7/ft',
+    compact: '$8/bulb/ft',
+    short: '$8/ft',
   },
   insurance: {
     amount: '$3M',

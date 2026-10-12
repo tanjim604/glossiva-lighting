@@ -13,7 +13,7 @@ export interface Package {
   /** Card photo (owner-supplied or public-domain CC0). */
   image: ImageMetadata;
   imageAlt: string;
-  /** Large price line, e.g. "$7", plus the small unit text next to it. */
+  /** Large price line, e.g. "$8", plus the small unit text next to it. */
   price: { main: string; unit?: string };
   features: string[];
   featured?: string;
@@ -26,7 +26,7 @@ export const packages: Package[] = [
     tier: 'Essential',
     image: rooflineGable,
     imageAlt: 'House with its roofline outlined in warm white lights',
-    price: { main: '$7', unit: '/ bulb / ft' },
+    price: { main: '$8', unit: '/ bulb / ft' },
     features: ['Roofline lighting', 'Install & January takedown'],
   },
   {
@@ -35,7 +35,7 @@ export const packages: Package[] = [
     tier: 'Enhanced',
     image: signatureHome,
     imageAlt: 'Home with warm white C9 lights along the rooflines and a wreath on the front door',
-    price: { main: '$7', unit: '/ ft + wreaths' },
+    price: { main: '$8', unit: '/ ft + wreaths' },
     features: ['Roofline lighting', 'Festive wreaths'],
   },
   {
